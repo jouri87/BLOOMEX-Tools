@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloomex - Lorem Ipsum Generator</title> <!-- Changed Title -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'/>
+
+    <style>
+      /* --- Base Styles & Reset (Minimal) --- */
+      html {
+        font-family: sans-serif;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        /* Use Poppins as default, consistent with other tool */
+        font-family: 'Poppins', sans-serif;
+        background-color: #e6f7ff; /* Light blue background for the page */
+        color: #212121;
+        line-height: 1.6;
+         /* Ensure body takes at least full height if content is short */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      a {
+        background: transparent;
+        text-decoration: none;
+        color: #2196f3; /* Default link color from theme */
+      }
+      a:active, a:hover {
+        outline: 0;
+        color: #2196f3; /* Hover color */
+      }
+      h1, h2, h3, h4, h5, h6 {
+         margin-top: 0;
+         margin-bottom: 0.5rem;
+         font-weight: 500;
+      }
+      /* Helper */
+       .container {
+           width: 100%;
+           padding-right: 15px;
+           padding-left: 15px;
+           margin-right: auto;
+           margin-left: auto;
+       }
+       @media (min-width: 576px) { .container { max-width: 540px; } }
+       @media (min-width: 768px) { .container { max-width: 720px; } }
+       @media (min-width: 992px) { .container { max-width: 960px; } }
+       @media (min-width: 1200px) { .container { max-width: 1140px; } }
+
+
+      /* --- Replicated Header Styles --- */
+      .bloomex-header {
+          background-color: #ffffff; /* White background like sticky */
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow */
+          padding: 10px 0;
+          position: sticky; /* Make header sticky */
+          top: 0;
+          z-index: 1000;
+          width: 100%;
+      }
+      .bloomex-header .container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .bloomex-header .logo-area {
+          display: flex;
+          align-items: center;
+      }
+      .bloomex-header .logo-area a {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+      }
+       /* Simple Placeholder Logo */
+       .bloomex-header .logo-placeholder {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4f46e5, #10b981);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+            flex-shrink: 0; /* Prevent shrinking */
+       }
+      .bloomex-header .site-name {
+          font-family: 'Roboto', sans-serif;
+          font-weight: bold;
+          font-size: 28px; /* Adjusted for typical header */
+          color: #212121; /* Black/dark grey color for contrast on white */
+          line-height: 1.2;
+      }
+      .bloomex-header .navigation-area nav ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+      }
+      .bloomex-header .navigation-area nav ul li {
+          margin-left: 20px; /* Spacing between nav items */
+      }
+      .bloomex-header .navigation-area nav ul li a {
+          font-family: 'Roboto', sans-serif;
+          font-weight: 700; /* Bold */
+          font-size: 15px;
+          text-transform: uppercase;
+          color: #757575; /* Grey color for non-active tabs */
+          padding: 12px 8px;
+          display: block;
+          border-bottom: 4px solid transparent; /* For active state */
+          transition: color 0.3s ease, border-color 0.3s ease;
+      }
+      .bloomex-header .navigation-area nav ul li a:hover {
+           color: #212121; /* Black/dark grey on hover */
+      }
+      .bloomex-header .navigation-area nav ul li a.active {
+          color: #212121;
+          border-bottom-color: #2196f3;
+      }
+
+       /* Mobile Menu Styles (Basic) */
+       .bloomex-header .mobile-menu-button {
+           display: none;
+           background: none;
+           border: none;
+           font-size: 24px;
+           cursor: pointer;
+           padding: 5px;
+           color: #212121;
+       }
+       .bloomex-header .mobile-nav {
+           display: none;
+           position: absolute;
+           top: 100%;
+           left: 0;
+           right: 0;
+           background-color: #ffffff;
+           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+           padding: 10px 0;
+       }
+       .bloomex-header .mobile-nav.active {
+           display: block;
+       }
+       .bloomex-header .mobile-nav ul {
+           flex-direction: column;
+           width: 100%;
+            list-style: none; /* Ensure list style is removed */
+             margin: 0; /* Ensure margin is removed */
+             padding: 0; /* Ensure padding is removed */
+       }
+       .bloomex-header .mobile-nav ul li {
+           margin-left: 0;
+           text-align: center;
+       }
+       .bloomex-header .mobile-nav ul li a {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+            display: block; /* Make links block level */
+            color: #757575; /* Match desktop non-active color */
+       }
+        .bloomex-header .mobile-nav ul li:last-child a {
+            border-bottom: none;
+        }
+        .bloomex-header .mobile-nav ul li a.active {
+             border-bottom-color: #eee; /* Keep border consistent */
+             color: #212121; /* Active color */
+             background-color: #f8f8f8;
+        }
+
+
+       /* Responsive Header */
+       @media (max-width: 767px) {
+           .bloomex-header .navigation-area {
+               display: none;
+           }
+           .bloomex-header .mobile-menu-button {
+               display: block;
+           }
+       }
+
+
+      /* --- Tool Page Wrapper --- */
+       .tool-page-wrapper { /* Renamed for clarity */
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         flex-grow: 1;
+         padding: 30px 15px;
+         width: 100%;
+       }
+
+      /* --- Lorem Ipsum Tool Styles (Moved from internal style tag) --- */
+        /* Basic Reset & Container Styling */
+        #lorem-ipsum-generator-container * {
+            /* box-sizing: border-box; -- Handled globally */
+             /* margin: 0; -- Handled below */
+             /* padding: 0; -- Handled below */
+        }
+
+        #lorem-ipsum-generator-container {
+            font-family: 'Poppins', sans-serif; /* Using Poppins for consistency */
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+            padding: 25px 30px;
+            max-width: 600px; /* Responsive width */
+            width: 100%; /* Take available width */
+            /* Removed margin: 25px auto; Centering handled by wrapper */
+            border: 1px solid #f0f0f0;
+            overflow: hidden; /* Contain elements */
+            color: #444;
+        }
+
+        #lorem-ipsum-generator-container h3 {
+            text-align: center;
+            color: #333;
+            margin: 0 0 25px 0; /* Adjusted margin */
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        /* Controls Area */
+        .li-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center controls */
+            gap: 15px;
+            margin: 0 0 25px 0; /* Adjusted margin */
+            padding: 0;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+        }
+
+        .li-controls label {
+            font-weight: 500;
+            color: #555;
+            font-size: 0.95rem;
+            margin: 0;
+            padding: 0;
+        }
+
+        #li-paragraph-count {
+            padding: 8px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            width: 70px; /* Fixed width for number input */
+            text-align: center;
+             margin: 0; /* Reset margin */
+             font-family: inherit; /* Inherit font */
+        }
+        /* Style number input arrows (optional, browser-specific) */
+        #li-paragraph-count::-webkit-outer-spin-button,
+        #li-paragraph-count::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+         #li-paragraph-count[type=number] {
+           -moz-appearance: textfield; /* Firefox */
+         }
+
+        .li-button {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            color: white;
+            margin: 0; /* Reset margin */
+            font-family: inherit; /* Inherit font */
+        }
+
+        #li-generate-btn {
+            background-color: #007bff; /* Blue for generate */
+        }
+        #li-generate-btn:hover {
+            background-color: #0056b3;
+        }
+        #li-generate-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Output Area */
+        #li-output-text {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 0 0 20px 0; /* Adjusted margin */
+            max-height: 300px; /* Limit height and enable scroll */
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #495057;
+        }
+        /* Style paragraphs within the output */
+        #li-output-text p {
+            margin: 0 0 1em 0; /* Space between paragraphs */
+            padding: 0;
+        }
+        #li-output-text p:last-child {
+            margin-bottom: 0; /* No extra space after the last one */
+        }
+
+        /* Copy Button Area */
+        .li-copy-area {
+            text-align: center; /* Center the copy button */
+             margin: 0;
+             padding: 0;
+        }
+
+        #li-copy-btn {
+           background-color: #28a745; /* Green for copy */
+           display: inline-block; /* Allow centering */
+        }
+        #li-copy-btn:hover {
+           background-color: #218838;
+        }
+        #li-copy-btn:active {
+             transform: scale(0.97);
+        }
+        #li-copy-btn.copied {
+              background-color: #1a682b; /* Darker green when copied */
+              cursor: default;
+        }
+
+        /* Status Message Area */
+        #li-status-message {
+             text-align: center;
+             font-size: 0.85rem;
+             color: #6c757d;
+             margin: 15px 0 0 0; /* Adjusted margin */
+             padding: 0;
+             min-height: 1.2em; /* Reserve space */
+             transition: color 0.3s ease;
+        }
+        #li-status-message.success {
+             color: #28a745;
+             font-weight: 500;
+        }
+        #li-status-message.error {
+              color: #dc3545;
+              font-weight: 500;
+        }
+        /* --- End of Tool Styles --- */
+
+    </style>
+</head>
+<body>
+
+    <!-- Replicated Header -->
+    <header class="bloomex-header">
+        <div class="container">
+            <div class="logo-area">
+                 <!-- Remember to replace [YOUR_HOMEPAGE_URL] -->
+                <a href="[YOUR_HOMEPAGE_URL]">
+                   <div class="logo-placeholder">BX</div>
+                   <span class="site-name">BLOOMEX</span>
+                </a>
+            </div>
+             <button class="mobile-menu-button" id="mobile-menu-toggle" aria-label="Toggle Menu">☰</button>
+            <div class="navigation-area">
+                <nav>
+                    <ul>
+                        <!-- Remember to replace these URLs -->
+                        <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                        <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                        <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                        <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+         <!-- Mobile Navigation Dropdown -->
+        <div class="mobile-nav" id="mobile-nav-menu">
+             <ul>
+                 <!-- Remember to replace these URLs -->
+                  <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                  <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                  <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                  <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+             </ul>
+        </div>
+    </header>
+
+    <!-- Tool Content Wrapper -->
+    <div class="tool-page-wrapper"> <!-- Use renamed wrapper class -->
+
+      <!-- Lorem Ipsum Generator Tool HTML -->
+      <div id="lorem-ipsum-generator-container">
+          <!-- Internal <style> tag removed - styles moved to <head> -->
+
+          <!-- HTML Structure -->
+          <h3>Lorem Ipsum Generator</h3>
+
+          <!-- 1. Controls -->
+          <div class="li-controls">
+            <label for="li-paragraph-count">Paragraphs:</label>
+            <input type="number" id="li-paragraph-count" value="3" min="1" max="10">
+            <button id="li-generate-btn" class="li-button">Generate</button>
+          </div>
+
+          <!-- 2. Output Area -->
+          <div id="li-output-text">
+            Click "Generate" to create dummy text.
+          </div>
+
+          <!-- 3. Copy Button -->
+          <div class="li-copy-area">
+               <button id="li-copy-btn" class="li-button">Copy All Text</button>
+          </div>
+
+          <!-- 4. Status Message -->
+          <div id="li-status-message"></div>
+
+           <!-- Internal <script> tag removed - script moved below -->
+      </div>
+      <!-- End Lorem Ipsum Generator Tool HTML -->
+
+    </div>
+    <!-- End Tool Content Wrapper -->
+
+    <!-- Tool JavaScript (Moved from internal script tag) -->
+    <script>
+      // IIFE for Lorem Ipsum Generator
+      (function() {
+        const container = document.getElementById('lorem-ipsum-generator-container');
+        if (!container) {
+            console.error("Lorem Ipsum Generator container not found!");
+            return;
+        }
+
+        // Get DOM Elements
+        const paragraphCountInput = container.querySelector('#li-paragraph-count');
+        const generateBtn = container.querySelector('#li-generate-btn');
+        const outputDiv = container.querySelector('#li-output-text');
+        const copyBtn = container.querySelector('#li-copy-btn');
+        const statusMessage = container.querySelector('#li-status-message');
+
+        let copyTimeout = null;
+
+        // Lorem Ipsum Source Text
+        const loremPhrases = [
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.", "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.", "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", "Curabitur pretium tincidunt lacus.", "Nulla gravida orci a odio.", "Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris.", "Integer in mauris eu nibh euismod gravida.", "Duis ac tellus et risus vulputate vehicula.", "Donec lobortis risus a elit.", "Etiam tempor.", "Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam.", "Maecenas fermentum consequat mi.", "Donec fermentum.", "Pellentesque malesuada nulla a mi.", "Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque.", "Aliquam faucibus, elit ut dictum aliquet, felis nisl adipiscing sapien, sed malesuada diam lacus eget erat.", "Cras mollis scelerisque nunc.", "Nullam arcu.", "Aliquam consequat.", "Curabitur augue lorem, dapibus quis, laoreet et, pretium ac, nisi.", "Aenean magna nisl, mollis quis, molestie eu, feugiat in, orci.", "In hac habitasse platea dictumst.", "Fusce convallis, mauris imperdiet gravida bibendum, nisl turpis suscipit mauris, sed placerat ipsum urna sed risus.", "Praesent placerat breeder.", "Fusce pellentesque suscipit nibh.", "Integer vitae libero ac risus egestas placerat.", "Vestibulum commodo felis quis tortor.", "Ut aliquam sollicitudin leo.", "Cras iaculis ultricies nulla.", "Donec quis dui at dolor tempor interdum."
+        ];
+
+        // Event Listeners
+        if (generateBtn) {
+             generateBtn.addEventListener('click', generateLoremIpsum);
+        } else {
+            console.error("Generate button not found in Lorem Ipsum tool.");
+        }
+        if (copyBtn) {
+             copyBtn.addEventListener('click', copyGeneratedText);
+        } else {
+             console.error("Copy button not found in Lorem Ipsum tool.");
+        }
+
+
+        // Functions
+        function generateLoremIpsum() {
+          clearStatus();
+          const count = parseInt(paragraphCountInput.value) || 1;
+          const numParagraphs = Math.max(1, Math.min(10, count)); // Clamp
+
+          if (!outputDiv) return; // Safety check
+          outputDiv.innerHTML = ''; // Clear previous
+
+          for (let i = 0; i < numParagraphs; i++) {
+            const paragraph = document.createElement('p');
+            const numPhrases = Math.floor(Math.random() * 5) + 3;
+            let paragraphText = '';
+            for (let j = 0; j < numPhrases; j++) {
+               const randomIndex = Math.floor(Math.random() * loremPhrases.length);
+               paragraphText += loremPhrases[randomIndex] + ' ';
+            }
+            paragraph.textContent = paragraphText.trim();
+            outputDiv.appendChild(paragraph);
+          }
+           resetCopyButton();
+        }
+
+        function copyGeneratedText() {
+          if (!outputDiv || !navigator.clipboard) {
+              setStatus('Clipboard API not available.', true);
+              return;
+          }
+
+          let textToCopy = '';
+          const paragraphs = outputDiv.querySelectorAll('p');
+
+          if (paragraphs.length === 0 || outputDiv.textContent.trim() === 'Click "Generate" to create dummy text.') {
+              setStatus('Nothing to copy!', false);
+              return;
+          }
+
+          paragraphs.forEach((p, index) => {
+            textToCopy += p.textContent;
+            if (index < paragraphs.length - 1) {
+              textToCopy += '\n\n'; // Paragraph break
+            }
+          });
+
+          if (!textToCopy) {
+               setStatus('Nothing to copy!', false);
+               return;
+          }
+
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            if (copyBtn) {
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+            }
+            setStatus('Text copied to clipboard!', false, true); // isSuccess = true
+
+            if (copyTimeout) clearTimeout(copyTimeout);
+
+            copyTimeout = setTimeout(() => {
+                resetCopyButton();
+                clearStatus();
+            }, 2000);
+
+          }).catch(err => {
+            console.error('Failed to copy text: ', err);
+            setStatus('Error: Could not copy text.', true);
+             resetCopyButton();
+          });
+        }
+
+        function resetCopyButton() {
+             if(copyBtn) {
+                 copyBtn.textContent = 'Copy All Text';
+                 copyBtn.classList.remove('copied');
+             }
+        }
+
+        function setStatus(message, isError = false, isSuccess = false) {
+             if (statusMessage) {
+                  statusMessage.textContent = message;
+                  statusMessage.classList.remove('error', 'success');
+                  if (isError) {
+                      statusMessage.classList.add('error');
+                  } else if (isSuccess) {
+                     statusMessage.classList.add('success');
+                  }
+             }
+        }
+        function clearStatus() {
+            if (statusMessage) {
+                statusMessage.textContent = '';
+                statusMessage.classList.remove('error', 'success');
+            }
+        }
+
+      })(); // End Lorem Ipsum IIFE
+
+       // Simple Mobile Menu Toggle Script (Same as before)
+       (function() {
+           const menuButton = document.getElementById('mobile-menu-toggle');
+           const mobileNav = document.getElementById('mobile-nav-menu');
+
+           if (menuButton && mobileNav) {
+               menuButton.addEventListener('click', function() {
+                   mobileNav.classList.toggle('active');
+               });
+
+                // Optional: Close menu when clicking a link inside it
+                mobileNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                         mobileNav.classList.remove('active');
+                    });
+                });
+                 // Optional: Close menu when clicking outside
+                 document.addEventListener('click', function(event) {
+                     if (!mobileNav || !menuButton) return; // Ensure elements exist
+                     const isClickInsideNav = mobileNav.contains(event.target);
+                     const isClickOnButton = menuButton.contains(event.target);
+
+                     if (!isClickInsideNav && !isClickOnButton && mobileNav.classList.contains('active')) {
+                         mobileNav.classList.remove('active');
+                     }
+                 });
+           } else {
+                console.warn("Mobile menu button or nav element not found.");
+           }
+       })();
+    </script>
+
+</body>
+</html>
