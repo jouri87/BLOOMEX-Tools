@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloomex - Image Converter</title> <!-- Updated Title -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'/>
+
+    <style>
+      /* --- Base Styles & Reset (Minimal) --- */
+      html {
+        font-family: sans-serif;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif; /* Default font */
+        background-color: #e6f7ff; /* Light blue background for the page */
+        color: #212121;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      a {
+        background: transparent;
+        text-decoration: none;
+        color: #2196f3; /* Default link color */
+      }
+      a:active, a:hover {
+        outline: 0;
+        color: #2196f3; /* Hover color */
+      }
+      h1, h2, h3, h4, h5, h6 {
+         margin-top: 0;
+         margin-bottom: 0.5rem;
+         font-weight: 500;
+      }
+      /* Helper */
+       .container {
+           width: 100%;
+           padding-right: 15px;
+           padding-left: 15px;
+           margin-right: auto;
+           margin-left: auto;
+       }
+       @media (min-width: 576px) { .container { max-width: 540px; } }
+       @media (min-width: 768px) { .container { max-width: 720px; } }
+       @media (min-width: 992px) { .container { max-width: 960px; } }
+       @media (min-width: 1200px) { .container { max-width: 1140px; } }
+
+
+      /* --- Replicated Header Styles --- */
+      .bloomex-header {
+          background-color: #ffffff;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          padding: 10px 0;
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+          width: 100%;
+      }
+      .bloomex-header .container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .bloomex-header .logo-area {
+          display: flex;
+          align-items: center;
+      }
+      .bloomex-header .logo-area a {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+      }
+      .bloomex-header .logo-placeholder {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4f46e5, #10b981);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+            flex-shrink: 0;
+       }
+      .bloomex-header .site-name {
+          font-family: 'Roboto', sans-serif;
+          font-weight: bold;
+          font-size: 28px;
+          color: #212121;
+          line-height: 1.2;
+      }
+      .bloomex-header .navigation-area nav ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+      }
+      .bloomex-header .navigation-area nav ul li {
+          margin-left: 20px;
+      }
+      .bloomex-header .navigation-area nav ul li a {
+          font-family: 'Roboto', sans-serif;
+          font-weight: 700;
+          font-size: 15px;
+          text-transform: uppercase;
+          color: #757575;
+          padding: 12px 8px;
+          display: block;
+          border-bottom: 4px solid transparent;
+          transition: color 0.3s ease, border-color 0.3s ease;
+      }
+      .bloomex-header .navigation-area nav ul li a:hover {
+           color: #212121;
+      }
+      .bloomex-header .navigation-area nav ul li a.active {
+          color: #212121;
+          border-bottom-color: #2196f3;
+      }
+
+       /* Mobile Menu Styles */
+       .bloomex-header .mobile-menu-button {
+           display: none;
+           background: none;
+           border: none;
+           font-size: 24px;
+           cursor: pointer;
+           padding: 5px;
+           color: #212121;
+       }
+       .bloomex-header .mobile-nav {
+           display: none;
+           position: absolute;
+           top: 100%;
+           left: 0;
+           right: 0;
+           background-color: #ffffff;
+           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+           padding: 10px 0;
+       }
+       .bloomex-header .mobile-nav.active {
+           display: block;
+       }
+       .bloomex-header .mobile-nav ul {
+           flex-direction: column;
+           width: 100%;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+       }
+       .bloomex-header .mobile-nav ul li {
+           margin-left: 0;
+           text-align: center;
+       }
+       .bloomex-header .mobile-nav ul li a {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+            display: block;
+            color: #757575;
+       }
+        .bloomex-header .mobile-nav ul li:last-child a {
+            border-bottom: none;
+        }
+        .bloomex-header .mobile-nav ul li a.active {
+             border-bottom-color: #eee;
+             color: #212121;
+             background-color: #f8f8f8;
+        }
+
+       /* Responsive Header */
+       @media (max-width: 767px) {
+           .bloomex-header .navigation-area {
+               display: none;
+           }
+           .bloomex-header .mobile-menu-button {
+               display: block;
+           }
+       }
+
+      /* --- Tool Page Wrapper --- */
+       .tool-page-wrapper {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         flex-grow: 1;
+         padding: 30px 15px;
+         width: 100%;
+       }
+
+       /* --- Image Converter Tool Styles --- */
+        /* Basic Reset & Container Styling */
+        #image-converter-container * {
+            /* box-sizing: border-box; -- Handled globally */
+            /* margin: 0; -- Handled below */
+            /* padding: 0; -- Handled below */
+        }
+
+        #image-converter-container {
+            font-family: 'Poppins', sans-serif; /* Use Poppins */
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px 30px;
+            max-width: 550px; /* Responsive width */
+            width: 100%; /* Take available width */
+            /* margin: 20px auto; -- Removed, centering handled by wrapper */
+            border: 1px solid #eee;
+            overflow: hidden; /* Contain elements */
+        }
+
+        #image-converter-container h3 {
+            text-align: center;
+            color: #333;
+            margin: 0 0 20px 0; /* Adjusted margin */
+            font-weight: 600;
+        }
+
+        /* Upload Area */
+        #converter-upload-area {
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            margin: 0 0 25px 0; /* Adjusted margin */
+        }
+
+        #converter-upload-area.drag-over {
+            background-color: #e7f0ff;
+            border-color: #0056b3;
+        }
+
+        #converter-upload-area p {
+            color: #6c757d;
+            margin: 0 0 10px 0; /* Adjusted margin */
+            padding: 0;
+        }
+
+        #converter-upload-btn-proxy {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin: 0;
+            padding: 8px 16px; /* Reset padding */
+        }
+        #converter-upload-btn-proxy:hover {
+             background-color: #0056b3;
+        }
+
+        #converter-file-input {
+            display: none; /* Hide actual file input */
+        }
+
+        /* Image Preview */
+        #converter-image-preview {
+            text-align: center;
+            margin: 0 0 25px 0; /* Adjusted margin */
+            padding: 0;
+            max-height: 250px; /* Limit preview height */
+            overflow: hidden; /* Hide overflow if image is huge */
+        }
+
+        #converter-image-preview img {
+            max-width: 100%;
+            max-height: 250px;
+            height: auto;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        /* Configuration Section */
+        #converter-config-section {
+            margin: 0 0 25px 0; /* Adjusted margin */
+            padding: 0;
+            display: flex; /* Layout side-by-side on wider screens */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 20px; /* Space between items */
+        }
+
+        .converter-config-item {
+           flex: 1; /* Allow items to grow */
+           min-width: 180px; /* Prevent items from getting too small */
+           margin: 0; /* Reset margin */
+           padding: 0;
+        }
+
+        .converter-config-item label {
+            display: block;
+            margin: 0 0 8px 0; /* Adjusted margin */
+            padding: 0;
+            color: #444;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .converter-config-item select,
+        .converter-config-item input[type="range"] {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background-color: #fff;
+            font-family: inherit; /* Inherit Poppins */
+        }
+
+        .converter-config-item select {
+             appearance: none;
+             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+             background-repeat: no-repeat;
+             background-position: right 10px center;
+             background-size: 12px 10px;
+             padding-right: 30px; /* Space for arrow */
+        }
+
+        /* Compression Slider Specifics */
+        #converter-compression-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #converter-compression-value {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 0.9rem;
+        }
+
+        input[type="range"] {
+            height: 8px;
+            cursor: pointer;
+            appearance: none;
+            background: #e9ecef;
+            border-radius: 4px;
+            padding: 0; /* Override default padding */
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #007bff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #007bff;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Action Buttons */
+        #converter-action-area {
+            text-align: center;
+            margin: 15px 0 0 0; /* Adjusted margin */
+            padding: 0;
+        }
+
+        .converter-btn {
+            display: inline-block;
+            width: 100%; /* Full width buttons */
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+            text-decoration: none; /* For download link */
+            margin: 0 0 10px 0; /* Adjusted margin */
+            font-family: inherit; /* Inherit Poppins */
+        }
+        .converter-btn:last-child {
+            margin-bottom: 0; /* No margin on last button */
+        }
+
+
+        #converter-convert-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        #converter-convert-btn:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        #converter-convert-btn:disabled {
+            background-color: #a0c4ff;
+            cursor: not-allowed;
+        }
+
+        #converter-download-btn {
+            background-color: #28a745; /* Green for download */
+            color: white;
+            display: none; /* Hidden initially */
+        }
+        #converter-download-btn:hover {
+            background-color: #218838;
+        }
+
+        #converter-download-btn .icon {
+            margin-right: 8px;
+            font-size: 1.1em; /* Slightly larger icon */
+            vertical-align: middle;
+        }
+
+
+        /* Status Message */
+        #converter-status {
+            text-align: center;
+            margin: 15px 0 0 0; /* Adjusted margin */
+            padding: 0;
+            font-size: 0.9rem;
+            color: #6c757d;
+            min-height: 1.2em; /* Reserve space */
+        }
+        #converter-status.error {
+            color: #dc3545; /* Red for errors */
+            font-weight: bold;
+        }
+
+        /* Steps Guide */
+        #converter-steps-guide {
+            margin: 25px 0 0 0; /* Adjusted margin */
+            padding: 15px 0 0 0; /* Adjusted padding */
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 0.8rem;
+            color: #6c757d;
+            flex-wrap: wrap; /* Allow steps to wrap */
+            gap: 10px; /* Space between steps if they wrap */
+        }
+
+        #converter-steps-guide .step {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between icon and text */
+        }
+
+        #converter-steps-guide .step .icon {
+             font-size: 1.1em; /* Adjust icon size */
+             color: #007bff; /* Use accent color for icons */
+        }
+
+
+        /* Helper Class */
+        .converter-hidden {
+            display: none !important;
+        }
+       /* --- End of Tool Styles --- */
+    </style>
+</head>
+<body>
+
+    <!-- Replicated Header -->
+    <header class="bloomex-header">
+        <div class="container">
+            <div class="logo-area">
+                 <!-- Remember to replace [YOUR_HOMEPAGE_URL] -->
+                <a href="[YOUR_HOMEPAGE_URL]">
+                   <div class="logo-placeholder">BX</div>
+                   <span class="site-name">BLOOMEX</span>
+                </a>
+            </div>
+             <button class="mobile-menu-button" id="mobile-menu-toggle" aria-label="Toggle Menu">☰</button>
+            <div class="navigation-area">
+                <nav>
+                    <ul>
+                        <!-- Remember to replace these URLs -->
+                        <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                        <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                        <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                        <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+         <!-- Mobile Navigation Dropdown -->
+        <div class="mobile-nav" id="mobile-nav-menu">
+             <ul>
+                 <!-- Remember to replace these URLs -->
+                  <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                  <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                  <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                  <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+             </ul>
+        </div>
+    </header>
+
+    <!-- Tool Content Wrapper -->
+    <div class="tool-page-wrapper">
+
+      <!-- Image Converter Tool HTML -->
+      <div id="image-converter-container">
+          <!-- Internal <style> tag removed -->
+
+          <!-- HTML Structure -->
+          <h3>Image Converter Tool</h3>
+
+          <!-- 1. Upload Area -->
+          <div id="converter-upload-area">
+            <input type="file" id="converter-file-input" accept="image/*">
+            <p>Drag & drop your image here, or</p>
+            <span id="converter-upload-btn-proxy">Choose an Image</span>
+          </div>
+
+          <!-- 2. Preview Area (Initially Hidden) -->
+          <div id="converter-image-preview" class="converter-hidden">
+            <img id="converter-preview-img" src="#" alt="Image Preview">
+          </div>
+
+          <!-- 3. Configuration (Initially Hidden) -->
+          <div id="converter-config-section" class="converter-hidden">
+            <div class="converter-config-item">
+              <label for="converter-format-select">Output Format:</label>
+              <select id="converter-format-select">
+                <option value="jpeg">JPEG</option>
+                <option value="png">PNG</option>
+                <option value="webp">WebP</option>
+                <option value="gif">GIF (Static Only)</option>
+                <option value="bmp">BMP (Outputs PNG)</option>
+                <option value="tiff">TIFF (Outputs PNG)</option>
+                <option value="svg">SVG (Outputs PNG)</option>
+                <option value="ico">ICO (Outputs PNG)</option>
+                <option value="jpg">JPG</option> <!-- Added JPG as separate option -->
+              </select>
+            </div>
+            <div class="converter-config-item">
+                <label for="converter-compression-slider" id="converter-compression-label">
+                  <span>Compression (%):</span>
+                  <span id="converter-compression-value">80</span>
+                </label>
+              <input type="range" id="converter-compression-slider" min="10" max="100" value="80">
+            </div>
+          </div>
+
+          <!-- 4. Actions -->
+          <div id="converter-action-area">
+            <button id="converter-convert-btn" class="converter-btn" disabled>Convert Image</button>
+            <a id="converter-download-btn" href="#" download="converted_image" class="converter-btn">
+                <span class="icon">💾</span> Download Image
+            </a>
+          </div>
+
+          <!-- 5. Status Message -->
+          <div id="converter-status">Select an image to start.</div>
+
+          <!-- 6. Steps Guide -->
+           <div id="converter-steps-guide">
+               <div class="step"><span class="icon">🖼️</span> 1. Select Image</div>
+               <div class="step"><span class="icon">⚙️</span> 2. Select Format</div>
+               <div class="step"><span class="icon">💾</span> 3. Download</div>
+           </div>
+
+           <!-- Internal <script> tag removed -->
+      </div>
+      <!-- End Image Converter Tool HTML -->
+
+    </div>
+    <!-- End Tool Content Wrapper -->
+
+    <!-- Tool JavaScript -->
+    <script>
+      // IIFE for Image Converter
+      (function() {
+        const container = document.getElementById('image-converter-container');
+        if (!container) {
+            console.error("Image Converter container not found!");
+            return;
+        }
+
+        // Get DOM Elements
+        const uploadArea = container.querySelector('#converter-upload-area');
+        const fileInput = container.querySelector('#converter-file-input');
+        const uploadBtnProxy = container.querySelector('#converter-upload-btn-proxy');
+        const imagePreviewDiv = container.querySelector('#converter-image-preview');
+        const previewImg = container.querySelector('#converter-preview-img');
+        const configSection = container.querySelector('#converter-config-section');
+        const formatSelect = container.querySelector('#converter-format-select');
+        const compressionSlider = container.querySelector('#converter-compression-slider');
+        const compressionValueSpan = container.querySelector('#converter-compression-value');
+        const convertBtn = container.querySelector('#converter-convert-btn');
+        const downloadBtn = container.querySelector('#converter-download-btn');
+        const statusDiv = container.querySelector('#converter-status');
+
+        // State Variables
+        let originalFile = null;
+        let originalImageDataUrl = null;
+        let convertedImageDataUrl = null;
+
+        // --- Event Listeners ---
+        if(uploadArea && fileInput) {
+            uploadArea.addEventListener('click', () => fileInput.click());
+            // Drag & Drop Listeners
+            uploadArea.addEventListener('dragover', handleDragOver);
+            uploadArea.addEventListener('dragleave', handleDragLeave);
+            uploadArea.addEventListener('drop', handleDrop);
+        }
+        if(uploadBtnProxy && fileInput) {
+             uploadBtnProxy.addEventListener('click', (e) => {
+                e.stopPropagation();
+                fileInput.click();
+            });
+        }
+        if(fileInput) fileInput.addEventListener('change', handleFileSelect);
+        if(compressionSlider && compressionValueSpan) compressionSlider.addEventListener('input', handleSliderInput);
+        if(formatSelect) formatSelect.addEventListener('change', handleFormatChange);
+        if(convertBtn) convertBtn.addEventListener('click', convertImage);
+
+
+        // --- Functions ---
+
+        function handleSliderInput() {
+            if (compressionValueSpan) compressionValueSpan.textContent = compressionSlider.value;
+            updateSliderOpacity();
+            resetConversionState(); // Reset if settings change after conversion
+        }
+
+        function handleFormatChange() {
+            updateSliderOpacity();
+            resetConversionState(); // Reset if settings change after conversion
+        }
+
+        function updateSliderOpacity() {
+             if (!compressionSlider || !formatSelect) return;
+             const selectedFormat = formatSelect.value.toLowerCase();
+             if (selectedFormat === 'jpeg' || selectedFormat === 'jpg' || selectedFormat === 'webp') {
+                 compressionSlider.style.opacity = '1';
+                 compressionSlider.disabled = false;
+             } else {
+                 compressionSlider.style.opacity = '0.5';
+                 compressionSlider.disabled = true; // Disable slider for non-applicable formats
+             }
+        }
+
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            processFile(file);
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if(uploadArea) uploadArea.classList.add('drag-over');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            event.stopPropagation();
+             if(uploadArea) uploadArea.classList.remove('drag-over');
+        }
+
+        function handleDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if(uploadArea) uploadArea.classList.remove('drag-over');
+            const file = event.dataTransfer.files[0];
+            processFile(file);
+        }
+
+        function processFile(file) {
+             if (file && file.type.startsWith('image/')) {
+                originalFile = file;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    originalImageDataUrl = e.target.result;
+                    if (previewImg) previewImg.src = originalImageDataUrl;
+                    if (imagePreviewDiv) imagePreviewDiv.classList.remove('converter-hidden');
+                    if (configSection) configSection.classList.remove('converter-hidden');
+                    if (convertBtn) convertBtn.disabled = false;
+                    if (downloadBtn) downloadBtn.style.display = 'none'; // Hide prev download
+                    setStatus('Image loaded. Ready to convert.');
+                    resetConversionState(); // Apply initial state based on format/slider
+                }
+                reader.onerror = function() {
+                    setStatus('Error reading file.', true);
+                    resetUI();
+                }
+                reader.readAsDataURL(file);
+             } else {
+                setStatus('Please select/drop a valid image file.', true);
+                resetUI();
+             }
+         }
+
+
+        function convertImage() {
+            if (!originalImageDataUrl || !originalFile || !canvas || !convertBtn) {
+                setStatus('No image loaded or required elements missing.', true);
+                return;
+            }
+
+            setStatus('Converting...');
+            convertBtn.disabled = true;
+            if(downloadBtn) downloadBtn.style.display = 'none';
+
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+
+                const selectedFormat = formatSelect.value.toLowerCase();
+                if ((selectedFormat === 'jpeg' || selectedFormat === 'jpg' || selectedFormat === 'bmp') && ctx) {
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                }
+
+                if (ctx) ctx.drawImage(img, 0, 0);
+
+                let outputMimeType = 'image/png';
+                let quality = compressionSlider.value / 100;
+                let useQuality = false;
+
+                if (selectedFormat === 'jpeg' || selectedFormat === 'jpg') {
+                   outputMimeType = 'image/jpeg';
+                   useQuality = true;
+                } else if (selectedFormat === 'png') {
+                   outputMimeType = 'image/png';
+                } else if (selectedFormat === 'webp') {
+                   try {
+                       canvas.toDataURL('image/webp', 0.8); // Test support
+                       outputMimeType = 'image/webp';
+                       useQuality = true;
+                   } catch (e) {
+                       console.warn("WebP conversion not supported, falling back to PNG.");
+                       setStatus('WebP not supported, converted to PNG.', false);
+                       outputMimeType = 'image/png';
+                       useQuality = false;
+                   }
+                } else if (['gif', 'bmp', 'tiff', 'svg', 'ico'].includes(selectedFormat)) {
+                    outputMimeType = 'image/png'; // Canvas fallback is PNG
+                    console.warn(`Format ${selectedFormat} requested, outputting static PNG via Canvas.`);
+                }
+
+                try {
+                   convertedImageDataUrl = useQuality
+                       ? canvas.toDataURL(outputMimeType, quality)
+                       : canvas.toDataURL(outputMimeType);
+
+                   if (downloadBtn) {
+                       downloadBtn.href = convertedImageDataUrl;
+                       downloadBtn.download = generateFilename(originalFile.name, selectedFormat);
+                       downloadBtn.style.display = 'inline-block';
+                   }
+                   if (convertBtn) convertBtn.style.display = 'none';
+
+                   setStatus('Conversion complete!');
+
+                } catch (e) {
+                   console.error("Canvas toDataURL error:", e);
+                   setStatus('Error during conversion process.', true);
+                   resetConversionState();
+                }
+            };
+
+            img.onerror = () => {
+                setStatus('Could not load image data for conversion.', true);
+                resetConversionState();
+            };
+
+            img.src = originalImageDataUrl;
+        }
+
+        function generateFilename(originalName, selectedExt) {
+            const nameWithoutExtension = originalName.split('.').slice(0, -1).join('.') || 'converted_image';
+            let finalExtension = selectedExt.toLowerCase();
+
+            if(finalExtension === 'jpeg') finalExtension = 'jpg';
+            if(finalExtension === 'tiff') finalExtension = 'tif';
+
+            // Check if fallback to PNG actually happened
+             if (['gif', 'bmp', 'tiff', 'svg', 'ico'].includes(selectedExt.toLowerCase())) {
+                 if (convertedImageDataUrl && convertedImageDataUrl.startsWith('data:image/png')) {
+                      finalExtension = 'png';
+                  }
+             }
+
+            return `${nameWithoutExtension}.${finalExtension}`;
+        }
+
+        function setStatus(message, isError = false) {
+            if (statusDiv) {
+                statusDiv.textContent = message;
+                statusDiv.className = isError ? 'error' : ''; // Reset classes then add error if needed
+            }
+        }
+
+        function resetUI() {
+            if(imagePreviewDiv) imagePreviewDiv.classList.add('converter-hidden');
+            if(configSection) configSection.classList.add('converter-hidden');
+            if(convertBtn) {
+                 convertBtn.disabled = true;
+                 convertBtn.style.display = 'inline-block';
+            }
+            if(downloadBtn) downloadBtn.style.display = 'none';
+            if(previewImg) previewImg.src = '#';
+            originalFile = null;
+            originalImageDataUrl = null;
+            convertedImageDataUrl = null;
+            if(fileInput) fileInput.value = '';
+            setStatus('Select an image to start.');
+            if(compressionSlider) compressionSlider.value = 80;
+            if(compressionValueSpan) compressionValueSpan.textContent = '80';
+            if(formatSelect) formatSelect.value = 'jpeg';
+            updateSliderOpacity(); // Reset slider opacity based on default format
+       }
+
+        function resetConversionState() {
+            // Re-enable convert button if a file is loaded, hide download button
+            if(convertBtn) {
+                 convertBtn.disabled = (originalFile === null);
+                 convertBtn.style.display = 'inline-block';
+            }
+            if(downloadBtn) {
+                downloadBtn.style.display = 'none';
+                downloadBtn.href = '#';
+            }
+            convertedImageDataUrl = null;
+            if (originalFile) {
+                // Keep status relevant if settings changed after loading
+                //setStatus('Settings changed. Convert again.');
+            } else {
+                setStatus('Select an image to start.');
+            }
+            updateSliderOpacity(); // Make sure slider state matches format
+        }
+
+        // Initial UI state check
+        resetUI();
+
+      })(); // End Image Converter IIFE
+
+
+       // Simple Mobile Menu Toggle Script (Same as before)
+       (function() {
+           const menuButton = document.getElementById('mobile-menu-toggle');
+           const mobileNav = document.getElementById('mobile-nav-menu');
+
+           if (menuButton && mobileNav) {
+               menuButton.addEventListener('click', function() {
+                   mobileNav.classList.toggle('active');
+               });
+
+                mobileNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                         mobileNav.classList.remove('active');
+                    });
+                });
+
+                 document.addEventListener('click', function(event) {
+                     if (!mobileNav || !menuButton) return;
+                     const isClickInsideNav = mobileNav.contains(event.target);
+                     const isClickOnButton = menuButton.contains(event.target);
+
+                     if (!isClickInsideNav && !isClickOnButton && mobileNav.classList.contains('active')) {
+                         mobileNav.classList.remove('active');
+                     }
+                 });
+           } else {
+                console.warn("Mobile menu button or nav element not found.");
+           }
+       })();
+    </script>
+
+</body>
+</html>
