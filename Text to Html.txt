@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloomex - Text to HTML Converter</title> <!-- Updated Title -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'/>
+
+    <style>
+      /* --- Base Styles & Reset (Minimal) --- */
+      html {
+        font-family: sans-serif;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif; /* Default font */
+        background-color: #e6f7ff; /* Light blue background */
+        color: #212121;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      a {
+        background: transparent;
+        text-decoration: none;
+        color: #2196f3; /* Default link color */
+      }
+      a:active, a:hover {
+        outline: 0;
+        color: #2196f3; /* Hover color */
+      }
+      h1, h2, h3, h4, h5, h6 {
+         margin-top: 0;
+         margin-bottom: 0.5rem;
+         font-weight: 500;
+      }
+      /* Helper */
+       .container {
+           width: 100%;
+           padding-right: 15px;
+           padding-left: 15px;
+           margin-right: auto;
+           margin-left: auto;
+       }
+       @media (min-width: 576px) { .container { max-width: 540px; } }
+       @media (min-width: 768px) { .container { max-width: 720px; } }
+       @media (min-width: 992px) { .container { max-width: 960px; } }
+       @media (min-width: 1200px) { .container { max-width: 1140px; } }
+
+
+      /* --- Replicated Header Styles --- */
+      .bloomex-header {
+          background-color: #ffffff;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          padding: 10px 0;
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+          width: 100%;
+      }
+      .bloomex-header .container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .bloomex-header .logo-area {
+          display: flex;
+          align-items: center;
+      }
+      .bloomex-header .logo-area a {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+      }
+      .bloomex-header .logo-placeholder {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4f46e5, #10b981);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+            flex-shrink: 0;
+       }
+      .bloomex-header .site-name {
+          font-family: 'Roboto', sans-serif;
+          font-weight: bold;
+          font-size: 28px;
+          color: #212121;
+          line-height: 1.2;
+      }
+      .bloomex-header .navigation-area nav ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+      }
+      .bloomex-header .navigation-area nav ul li {
+          margin-left: 20px;
+      }
+      .bloomex-header .navigation-area nav ul li a {
+          font-family: 'Roboto', sans-serif;
+          font-weight: 700;
+          font-size: 15px;
+          text-transform: uppercase;
+          color: #757575;
+          padding: 12px 8px;
+          display: block;
+          border-bottom: 4px solid transparent;
+          transition: color 0.3s ease, border-color 0.3s ease;
+      }
+      .bloomex-header .navigation-area nav ul li a:hover {
+           color: #212121;
+      }
+      .bloomex-header .navigation-area nav ul li a.active {
+          color: #212121;
+          border-bottom-color: #2196f3;
+      }
+
+       /* Mobile Menu Styles */
+       .bloomex-header .mobile-menu-button {
+           display: none;
+           background: none;
+           border: none;
+           font-size: 24px;
+           cursor: pointer;
+           padding: 5px;
+           color: #212121;
+       }
+       .bloomex-header .mobile-nav {
+           display: none;
+           position: absolute;
+           top: 100%;
+           left: 0;
+           right: 0;
+           background-color: #ffffff;
+           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+           padding: 10px 0;
+       }
+       .bloomex-header .mobile-nav.active {
+           display: block;
+       }
+       .bloomex-header .mobile-nav ul {
+           flex-direction: column;
+           width: 100%;
+           list-style: none;
+           margin: 0;
+           padding: 0;
+       }
+       .bloomex-header .mobile-nav ul li {
+           margin-left: 0;
+           text-align: center;
+       }
+       .bloomex-header .mobile-nav ul li a {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+            display: block;
+            color: #757575;
+       }
+       .bloomex-header .mobile-nav ul li:last-child a {
+            border-bottom: none;
+       }
+       .bloomex-header .mobile-nav ul li a.active {
+             border-bottom-color: #eee;
+             color: #212121;
+             background-color: #f8f8f8;
+       }
+
+       /* Responsive Header */
+       @media (max-width: 767px) {
+           .bloomex-header .navigation-area {
+               display: none;
+           }
+           .bloomex-header .mobile-menu-button {
+               display: block;
+           }
+       }
+
+      /* --- Tool Page Wrapper --- */
+       .tool-page-wrapper {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         flex-grow: 1;
+         padding: 30px 15px;
+         width: 100%;
+       }
+
+      /* --- Text to HTML Converter Tool Styles --- */
+        .text-html-converter-container {
+            max-width: 650px;
+            /* margin: 25px auto; -- Handled by wrapper */
+            width: 100%; /* Ensure it takes available space */
+            padding: 20px 25px;
+            background-color: #f8f9fa; /* Soft background */
+            border: 1px solid #dee2e6; /* Light border */
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            font-family: 'Poppins', sans-serif; /* Apply Poppins */
+            color: #343a40; /* Dark grey text */
+        }
+
+        .text-html-converter-container h2 {
+            text-align: center;
+            color: #212529; /* Near black */
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 1.5em;
+        }
+
+        .thc-section {
+            margin-bottom: 20px;
+        }
+
+        .thc-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057; /* Mid-grey label */
+            font-size: 0.95em;
+        }
+
+        .thc-section textarea {
+            width: 100%;
+            min-height: 180px;
+            padding: 12px 15px;
+            border: 1px solid #ced4da; /* Standard grey border */
+            border-radius: 8px; /* Rounded corners */
+            font-size: 1em;
+            line-height: 1.5;
+            box-sizing: border-box;
+            resize: vertical;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: #fff;
+            font-family: inherit; /* Inherit Poppins */
+        }
+
+        .thc-section textarea:focus {
+            outline: none;
+            border-color: #86b7fe; /* Bootstrap focus blue */
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+        }
+
+        /* Style for the read-only output area */
+        #thc-output-html {
+            background-color: #e9ecef; /* Light grey to indicate read-only */
+            font-family: 'Courier New', Courier, monospace; /* Monospace for code */
+            font-size: 0.95em;
+             color: #212529;
+        }
+
+        .thc-buttons {
+            display: flex;
+            justify-content: space-between; /* Space out buttons */
+            align-items: center;
+            margin-top: 15px;
+             gap: 15px; /* Add gap between buttons */
+             flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+        }
+
+        .thc-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            flex-grow: 1; /* Allow buttons to grow */
+            min-width: 120px; /* Minimum width */
+            text-align: center;
+            font-family: inherit; /* Inherit Poppins */
+        }
+
+        #thc-convert-btn {
+            background-color: #0d6efd; /* Primary blue */
+            color: white;
+        }
+
+        #thc-convert-btn:hover {
+            background-color: #0b5ed7; /* Darker blue */
+        }
+
+        #thc-copy-btn {
+            background-color: #198754; /* Success green */
+            color: white;
+        }
+        #thc-copy-btn:hover {
+             background-color: #157347; /* Darker green */
+         }
+
+         .thc-btn:active {
+             transform: scale(0.98); /* Click effect */
+         }
+
+         #thc-copy-status {
+            font-size: 0.85em;
+            color: #198754; /* Green success color */
+            text-align: right;
+            min-height: 1.2em; /* Reserve space */
+            margin-top: 5px;
+            margin-left: auto; /* Push to the right if flex allows */
+            flex-basis: 100%; /* Take full width in wrap scenario */
+            order: 3; /* Ensure it appears below buttons */
+         }
+
+        /* Responsive adjustments */
+        @media (max-width: 500px) {
+             .text-html-converter-container {
+                padding: 15px;
+                 /* margin: 15px; -- Let wrapper handle margins */
+            }
+            .thc-buttons {
+                 flex-direction: column; /* Stack buttons vertically */
+                 align-items: stretch; /* Make buttons full width */
+             }
+             #thc-copy-status {
+                 text-align: center;
+                 margin-top: 10px;
+             }
+        }
+        /* --- End of Tool Styles --- */
+    </style>
+</head>
+<body>
+
+    <!-- Replicated Header -->
+    <header class="bloomex-header">
+        <div class="container">
+            <div class="logo-area">
+                 <!-- Remember to replace [YOUR_HOMEPAGE_URL] -->
+                <a href="[YOUR_HOMEPAGE_URL]">
+                   <div class="logo-placeholder">BX</div>
+                   <span class="site-name">BLOOMEX</span>
+                </a>
+            </div>
+             <button class="mobile-menu-button" id="mobile-menu-toggle" aria-label="Toggle Menu">☰</button>
+            <div class="navigation-area">
+                <nav>
+                    <ul>
+                        <!-- Remember to replace these URLs -->
+                        <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                        <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                        <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                        <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+         <!-- Mobile Navigation Dropdown -->
+        <div class="mobile-nav" id="mobile-nav-menu">
+             <ul>
+                 <!-- Remember to replace these URLs -->
+                  <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                  <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                  <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                  <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+             </ul>
+        </div>
+    </header>
+
+    <!-- Tool Content Wrapper -->
+    <div class="tool-page-wrapper">
+
+        <!-- Text to HTML Converter Tool HTML -->
+        <div class="text-html-converter-container">
+            <!-- Internal <style> tag removed -->
+
+            <h2>Text to HTML Converter</h2>
+
+            <div class="thc-section">
+                <label for="thc-input-text">Enter Plain Text:</label>
+                <textarea id="thc-input-text" placeholder="Type or paste your plain text here..."></textarea>
+            </div>
+
+             <div class="thc-buttons">
+                 <button id="thc-convert-btn" class="thc-btn">Convert to HTML</button>
+                 <button id="thc-copy-btn" class="thc-btn">Copy HTML</button>
+                  <div id="thc-copy-status"></div> <!-- Status message area -->
+             </div>
+
+            <div class="thc-section">
+                <label for="thc-output-html">Generated HTML:</label>
+                <textarea id="thc-output-html" readonly placeholder="HTML output will appear here..."></textarea>
+            </div>
+
+             <!-- Internal <script> tag removed -->
+        </div>
+        <!-- End Text to HTML Converter Tool HTML -->
+
+    </div>
+    <!-- End Tool Content Wrapper -->
+
+    <!-- Tool JavaScript -->
+    <script>
+        // IIFE for Text to HTML Converter
+        (function() {
+             const container = document.querySelector('.text-html-converter-container');
+             if (!container) {
+                 console.error("Text to HTML Converter container not found!");
+                 return;
+             }
+
+            // Get DOM elements using container.querySelector
+            const inputText = container.querySelector('#thc-input-text');
+            const outputHtml = container.querySelector('#thc-output-html');
+            const convertBtn = container.querySelector('#thc-convert-btn');
+            const copyBtn = container.querySelector('#thc-copy-btn');
+            const copyStatus = container.querySelector('#thc-copy-status');
+
+            // Check if all elements were found
+            if (!inputText || !outputHtml || !convertBtn || !copyBtn || !copyStatus) {
+                 console.error("One or more elements required for the Text to HTML converter were not found.");
+                 return;
+             }
+
+
+            // Function to escape basic HTML characters
+            function escapeHtml(text) {
+                // Basic escaping, good enough for this purpose.
+                // More robust escaping might be needed depending on exact requirements.
+                return text
+                    .replace(/&/g, "&") // Must be first to avoid double-escaping
+                    .replace(/</g, "<")
+                    .replace(/>/g, ">");
+            }
+
+            // Function to convert plain text to HTML
+            function convertToHtml() {
+                const rawText = inputText.value;
+                copyStatus.textContent = ''; // Clear status
+
+                if (!rawText.trim()) {
+                    outputHtml.value = '';
+                    return;
+                }
+
+                const escapedText = escapeHtml(rawText);
+                const paragraphs = escapedText.split(/\n\s*\n+/); // Match one or more blank lines as separators
+                let htmlResult = '';
+
+                paragraphs.forEach(para => {
+                    const trimmedPara = para.trim();
+                    if (trimmedPara) {
+                        // Replace remaining single newlines within the paragraph with <br>
+                        const lines = trimmedPara.split(/\n/).join('<br>\n    '); // Add indent for readability
+                        htmlResult += `<p>\n    ${lines}\n</p>\n\n`;
+                    }
+                });
+
+                outputHtml.value = htmlResult.trim();
+            }
+
+            // Function to copy HTML to clipboard
+            function copyHtmlToClipboard() {
+                const htmlToCopy = outputHtml.value;
+                copyStatus.textContent = ''; // Clear status
+
+                if (!htmlToCopy) {
+                    copyStatus.textContent = 'Nothing to copy!';
+                    setTimeout(() => { if(copyStatus) copyStatus.textContent = ''; }, 2000);
+                    return;
+                }
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(htmlToCopy).then(() => {
+                        copyStatus.textContent = 'HTML Copied!';
+                        setTimeout(() => { if(copyStatus) copyStatus.textContent = ''; }, 2000);
+                    }).catch(err => {
+                        console.error('Failed to copy text: ', err);
+                        copyStatus.textContent = 'Copy failed!';
+                        setTimeout(() => { if(copyStatus) copyStatus.textContent = ''; }, 2000);
+                    });
+                } else {
+                     // Basic fallback for older environments (less reliable)
+                     try {
+                         outputHtml.select(); // Select the text
+                         document.execCommand('copy'); // Attempt copy command
+                         copyStatus.textContent = 'HTML Copied! (fallback)';
+                         setTimeout(() => { if(copyStatus) copyStatus.textContent = ''; }, 2000);
+                     } catch (err) {
+                          console.error('Fallback copy failed: ', err);
+                          copyStatus.textContent = 'Copy failed!';
+                           setTimeout(() => { if(copyStatus) copyStatus.textContent = ''; }, 2000);
+                     }
+                     window.getSelection().removeAllRanges(); // Deselect
+                }
+
+            }
+
+            // Add event listeners
+            convertBtn.addEventListener('click', convertToHtml);
+            copyBtn.addEventListener('click', copyHtmlToClipboard);
+
+        })(); // End Text to HTML Converter IIFE
+
+
+       // Simple Mobile Menu Toggle Script (Same as before)
+       (function() {
+           const menuButton = document.getElementById('mobile-menu-toggle');
+           const mobileNav = document.getElementById('mobile-nav-menu');
+
+           if (menuButton && mobileNav) {
+               menuButton.addEventListener('click', function() {
+                   mobileNav.classList.toggle('active');
+               });
+
+                mobileNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                         mobileNav.classList.remove('active');
+                    });
+                });
+
+                 document.addEventListener('click', function(event) {
+                     if (!mobileNav || !menuButton) return;
+                     const isClickInsideNav = mobileNav.contains(event.target);
+                     const isClickOnButton = menuButton.contains(event.target);
+
+                     if (!isClickInsideNav && !isClickOnButton && mobileNav.classList.contains('active')) {
+                         mobileNav.classList.remove('active');
+                     }
+                 });
+           } else {
+                console.warn("Mobile menu button or nav element not found.");
+           }
+       })();
+    </script>
+
+</body>
+</html>
