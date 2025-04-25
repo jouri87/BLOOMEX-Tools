@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloomex - BMI Calculator</title> <!-- Updated Title -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'/>
+
+    <style>
+      /* --- Base Styles & Reset (Minimal) --- */
+      html {
+        font-family: sans-serif;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif; /* Default font */
+        background-color: #e6f7ff; /* Light blue background */
+        color: #212121;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      a {
+        background: transparent;
+        text-decoration: none;
+        color: #2196f3; /* Default link color */
+      }
+      a:active, a:hover {
+        outline: 0;
+        color: #2196f3; /* Hover color */
+      }
+      h1, h2, h3, h4, h5, h6 {
+         margin-top: 0;
+         margin-bottom: 0.5rem;
+         font-weight: 500;
+      }
+      /* Helper */
+       .container {
+           width: 100%;
+           padding-right: 15px;
+           padding-left: 15px;
+           margin-right: auto;
+           margin-left: auto;
+       }
+       @media (min-width: 576px) { .container { max-width: 540px; } }
+       @media (min-width: 768px) { .container { max-width: 720px; } }
+       @media (min-width: 992px) { .container { max-width: 960px; } }
+       @media (min-width: 1200px) { .container { max-width: 1140px; } }
+
+
+      /* --- Replicated Header Styles --- */
+      .bloomex-header {
+          background-color: #ffffff;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          padding: 10px 0;
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+          width: 100%;
+      }
+      .bloomex-header .container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .bloomex-header .logo-area {
+          display: flex;
+          align-items: center;
+      }
+      .bloomex-header .logo-area a {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+      }
+      .bloomex-header .logo-placeholder {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4f46e5, #10b981);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+            flex-shrink: 0;
+       }
+      .bloomex-header .site-name {
+          font-family: 'Roboto', sans-serif;
+          font-weight: bold;
+          font-size: 28px;
+          color: #212121;
+          line-height: 1.2;
+      }
+      .bloomex-header .navigation-area nav ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+      }
+      .bloomex-header .navigation-area nav ul li {
+          margin-left: 20px;
+      }
+      .bloomex-header .navigation-area nav ul li a {
+          font-family: 'Roboto', sans-serif;
+          font-weight: 700;
+          font-size: 15px;
+          text-transform: uppercase;
+          color: #757575;
+          padding: 12px 8px;
+          display: block;
+          border-bottom: 4px solid transparent;
+          transition: color 0.3s ease, border-color 0.3s ease;
+      }
+      .bloomex-header .navigation-area nav ul li a:hover {
+           color: #212121;
+      }
+      .bloomex-header .navigation-area nav ul li a.active {
+          color: #212121;
+          border-bottom-color: #2196f3;
+      }
+
+       /* Mobile Menu Styles */
+       .bloomex-header .mobile-menu-button {
+           display: none;
+           background: none;
+           border: none;
+           font-size: 24px;
+           cursor: pointer;
+           padding: 5px;
+           color: #212121;
+       }
+       .bloomex-header .mobile-nav {
+           display: none;
+           position: absolute;
+           top: 100%;
+           left: 0;
+           right: 0;
+           background-color: #ffffff;
+           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+           padding: 10px 0;
+       }
+       .bloomex-header .mobile-nav.active {
+           display: block;
+       }
+       .bloomex-header .mobile-nav ul {
+           flex-direction: column;
+           width: 100%;
+           list-style: none;
+           margin: 0;
+           padding: 0;
+       }
+       .bloomex-header .mobile-nav ul li {
+           margin-left: 0;
+           text-align: center;
+       }
+       .bloomex-header .mobile-nav ul li a {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+            display: block;
+            color: #757575;
+       }
+       .bloomex-header .mobile-nav ul li:last-child a {
+            border-bottom: none;
+       }
+       .bloomex-header .mobile-nav ul li a.active {
+             border-bottom-color: #eee;
+             color: #212121;
+             background-color: #f8f8f8;
+       }
+
+       /* Responsive Header */
+       @media (max-width: 767px) {
+           .bloomex-header .navigation-area {
+               display: none;
+           }
+           .bloomex-header .mobile-menu-button {
+               display: block;
+           }
+       }
+
+      /* --- Tool Page Wrapper --- */
+       .tool-page-wrapper {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         flex-grow: 1;
+         padding: 30px 15px;
+         width: 100%;
+       }
+
+      /* --- BMI Calculator Tool Styles --- */
+        /* Styles specifically for the BMI Calculator Embed */
+        .bmi-calculator-embed-container {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            max-width: 400px; /* Adjust as needed */
+             /* margin: 20px auto; -- Handled by wrapper */
+             width: 100%;
+            font-family: 'Poppins', sans-serif; /* Use Poppins */
+            border: 1px solid #e7e7e7;
+             /* box-sizing: border-box; -- Handled globally */
+        }
+        /* .bmi-calculator-embed-container *,
+        .bmi-calculator-embed-container *:before,
+        .bmi-calculator-embed-container *:after {
+             box-sizing: inherit; /* Handled globally */
+        /* } */
+        .bmi-calculator-embed-container h3 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .bmi-calculator-embed-container .bmi-input-group {
+            margin-bottom: 18px;
+        }
+        .bmi-calculator-embed-container label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        .bmi-calculator-embed-container input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            font-family: inherit; /* Inherit Poppins */
+        }
+        /* Remove arrows for number input */
+        .bmi-calculator-embed-container input[type=number]::-webkit-outer-spin-button,
+        .bmi-calculator-embed-container input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .bmi-calculator-embed-container input[type=number] {
+            -moz-appearance: textfield; /* Firefox */
+        }
+
+        .bmi-calculator-embed-container input[type="number"]:focus {
+            outline: none;
+            border-color: #4F46E5; /* Primary accent color */
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        .bmi-calculator-embed-container .bmi-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #4F46E5; /* Primary accent color */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            margin-top: 10px;
+             font-family: inherit; /* Inherit Poppins */
+        }
+        .bmi-calculator-embed-container .bmi-button:hover {
+            background-color: #4338CA; /* Darker shade for hover */
+        }
+         .bmi-calculator-embed-container .bmi-button:active {
+             transform: scale(0.99); /* Slight shrink on click */
+         }
+        .bmi-calculator-embed-container .bmi-result-area {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: 500;
+            line-height: 1.5;
+            /* Default hidden or empty look */
+            background-color: #f8f9fa;
+            border: 1px dashed #ccc;
+            color: #555;
+            min-height: 60px; /* Reserve some space */
+            display: flex; /* Use flex for centering content */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .bmi-calculator-embed-container .bmi-result-area.visible {
+             border-style: solid; /* Change border style when result is shown */
+        }
+
+        /* Category specific styles */
+         .bmi-calculator-embed-container .bmi-result-area.underweight {
+            background-color: #e0f2fe; /* Light Blue */
+            border-color: #7dd3fc;
+            color: #075985;
+         }
+         .bmi-calculator-embed-container .bmi-result-area.normal {
+            background-color: #dcfce7; /* Light Green */
+            border-color: #86efac;
+            color: #166534;
+         }
+         .bmi-calculator-embed-container .bmi-result-area.overweight {
+            background-color: #fef9c3; /* Light Yellow */
+            border-color: #fde047;
+            color: #854d0e;
+         }
+         .bmi-calculator-embed-container .bmi-result-area.obese {
+            background-color: #fee2e2; /* Light Red */
+            border-color: #fca5a5;
+            color: #991b1b;
+         }
+         .bmi-calculator-embed-container .bmi-result-area .bmi-value {
+             font-weight: 700;
+             font-size: 1.3em;
+             display: block;
+             margin-bottom: 5px;
+         }
+         .bmi-calculator-embed-container .bmi-result-area .bmi-category {
+             font-size: 1em; /* Adjusted for clarity */
+             display: block;
+         }
+         .bmi-calculator-embed-container .bmi-result-area .bmi-error {
+             color: #dc2626; /* Red for errors */
+             font-weight: 500;
+             font-size: 0.95em;
+         }
+
+         /* Basic Responsiveness */
+         @media (max-width: 480px) {
+             .bmi-calculator-embed-container {
+                 padding: 20px;
+                 /* max-width: 95%; -- Let wrapper handle width */
+             }
+             .bmi-calculator-embed-container h3 {
+                font-size: 1.2em;
+             }
+         }
+       /* --- End of Tool Styles --- */
+    </style>
+</head>
+<body>
+
+    <!-- Replicated Header -->
+    <header class="bloomex-header">
+        <div class="container">
+            <div class="logo-area">
+                 <!-- Remember to replace [YOUR_HOMEPAGE_URL] -->
+                <a href="[YOUR_HOMEPAGE_URL]">
+                   <div class="logo-placeholder">BX</div>
+                   <span class="site-name">BLOOMEX</span>
+                </a>
+            </div>
+             <button class="mobile-menu-button" id="mobile-menu-toggle" aria-label="Toggle Menu">☰</button>
+            <div class="navigation-area">
+                <nav>
+                    <ul>
+                        <!-- Remember to replace these URLs -->
+                        <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                        <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                        <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                        <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+         <!-- Mobile Navigation Dropdown -->
+        <div class="mobile-nav" id="mobile-nav-menu">
+             <ul>
+                 <!-- Remember to replace these URLs -->
+                  <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                  <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                  <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                  <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+             </ul>
+        </div>
+    </header>
+
+    <!-- Tool Content Wrapper -->
+    <div class="tool-page-wrapper">
+
+        <!-- BMI Calculator Tool HTML -->
+        <div class="bmi-calculator-embed-container">
+            <!-- Internal <style> tag removed -->
+
+            <h3>BMI Calculator</h3>
+            <form id="bmiCalculatorFormEmbed">
+                <div class="bmi-input-group">
+                    <label for="bmiWeightEmbed">Weight (kg):</label>
+                    <input type="number" id="bmiWeightEmbed" name="weight" placeholder="e.g., 70" required step="0.1">
+                </div>
+                <div class="bmi-input-group">
+                    <label for="bmiHeightEmbed">Height (cm):</label>
+                    <input type="number" id="bmiHeightEmbed" name="height" placeholder="e.g., 175" required step="0.1">
+                </div>
+                <button type="submit" class="bmi-button">Calculate BMI</button>
+            </form>
+            <div id="bmiResultEmbed" class="bmi-result-area">
+                Enter your weight and height to see your BMI result.
+            </div>
+
+             <!-- Internal <script> tag removed -->
+        </div>
+        <!-- End BMI Calculator Tool HTML -->
+
+    </div>
+    <!-- End Tool Content Wrapper -->
+
+    <!-- Tool JavaScript -->
+    <script>
+        // IIFE for BMI Calculator
+        (function() {
+            const container = document.querySelector('.bmi-calculator-embed-container');
+            if (!container) {
+                console.error("BMI Calculator container not found!");
+                return;
+            }
+
+            const form = container.querySelector('#bmiCalculatorFormEmbed');
+            const weightInput = container.querySelector('#bmiWeightEmbed');
+            const heightInput = container.querySelector('#bmiHeightEmbed');
+            const resultArea = container.querySelector('#bmiResultEmbed');
+
+            if (!form || !weightInput || !heightInput || !resultArea) {
+                console.error("BMI Calculator Embed Error: Could not find necessary elements.");
+                return; // Stop script if elements are missing
+            }
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Clear previous results and styles
+                resultArea.innerHTML = '';
+                resultArea.className = 'bmi-result-area'; // Reset classes
+
+                // Get and validate inputs
+                const weight = parseFloat(weightInput.value);
+                const heightCm = parseFloat(heightInput.value);
+
+                 // Basic validation
+                if (isNaN(weight) || weight <= 10 || weight > 500 || isNaN(heightCm) || heightCm <= 50 || heightCm > 250) {
+                    resultArea.innerHTML = '<span class="bmi-error">Please enter valid weight (10-500 kg) and height (50-250 cm).</span>';
+                    resultArea.classList.add('visible', 'obese'); // Use error styling
+                    return;
+                }
+
+                // Calculate BMI
+                const heightM = heightCm / 100;
+                const bmi = weight / (heightM * heightM);
+                const bmiRounded = bmi.toFixed(1); // Round to one decimal place
+
+                // Determine BMI category
+                let category = '';
+                let categoryClass = '';
+
+                if (bmi < 18.5) {
+                    category = 'Underweight';
+                    categoryClass = 'underweight';
+                } else if (bmi >= 18.5 && bmi < 24.9) {
+                    category = 'Normal weight';
+                    categoryClass = 'normal';
+                } else if (bmi >= 25 && bmi < 29.9) {
+                    category = 'Overweight';
+                    categoryClass = 'overweight';
+                } else { // bmi >= 30
+                    category = 'Obese';
+                    categoryClass = 'obese';
+                }
+
+                // Display result
+                resultArea.innerHTML = `
+                    <span class="bmi-value">${bmiRounded}</span>
+                    <span class="bmi-category">Your BMI category is: <strong>${category}</strong></span>
+                `;
+                resultArea.classList.add('visible', categoryClass);
+            });
+        })(); // End BMI Calculator IIFE
+
+
+       // Simple Mobile Menu Toggle Script (Same as before)
+       (function() {
+           const menuButton = document.getElementById('mobile-menu-toggle');
+           const mobileNav = document.getElementById('mobile-nav-menu');
+
+           if (menuButton && mobileNav) {
+               menuButton.addEventListener('click', function() {
+                   mobileNav.classList.toggle('active');
+               });
+
+                mobileNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                         mobileNav.classList.remove('active');
+                    });
+                });
+
+                 document.addEventListener('click', function(event) {
+                     if (!mobileNav || !menuButton) return;
+                     const isClickInsideNav = mobileNav.contains(event.target);
+                     const isClickOnButton = menuButton.contains(event.target);
+
+                     if (!isClickInsideNav && !isClickOnButton && mobileNav.classList.contains('active')) {
+                         mobileNav.classList.remove('active');
+                     }
+                 });
+           } else {
+                console.warn("Mobile menu button or nav element not found.");
+           }
+       })();
+    </script>
+
+</body>
+</html>
