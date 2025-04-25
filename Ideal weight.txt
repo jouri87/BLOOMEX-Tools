@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloomex - Ideal Weight Calculator</title> <!-- Updated Title -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'/>
+
+    <style>
+      /* --- Base Styles & Reset (Minimal) --- */
+      html {
+        font-family: sans-serif;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif; /* Default font */
+        background-color: #e6f7ff; /* Light blue background */
+        color: #212121;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      a {
+        background: transparent;
+        text-decoration: none;
+        color: #2196f3; /* Default link color */
+      }
+      a:active, a:hover {
+        outline: 0;
+        color: #2196f3; /* Hover color */
+      }
+      h1, h2, h3, h4, h5, h6 {
+         margin-top: 0;
+         margin-bottom: 0.5rem;
+         font-weight: 500;
+      }
+      /* Helper */
+       .container {
+           width: 100%;
+           padding-right: 15px;
+           padding-left: 15px;
+           margin-right: auto;
+           margin-left: auto;
+       }
+       @media (min-width: 576px) { .container { max-width: 540px; } }
+       @media (min-width: 768px) { .container { max-width: 720px; } }
+       @media (min-width: 992px) { .container { max-width: 960px; } }
+       @media (min-width: 1200px) { .container { max-width: 1140px; } }
+
+
+      /* --- Replicated Header Styles --- */
+      .bloomex-header {
+          background-color: #ffffff;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          padding: 10px 0;
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+          width: 100%;
+      }
+      .bloomex-header .container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .bloomex-header .logo-area {
+          display: flex;
+          align-items: center;
+      }
+      .bloomex-header .logo-area a {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+      }
+      .bloomex-header .logo-placeholder {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4f46e5, #10b981);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+            flex-shrink: 0;
+       }
+      .bloomex-header .site-name {
+          font-family: 'Roboto', sans-serif;
+          font-weight: bold;
+          font-size: 28px;
+          color: #212121;
+          line-height: 1.2;
+      }
+      .bloomex-header .navigation-area nav ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+      }
+      .bloomex-header .navigation-area nav ul li {
+          margin-left: 20px;
+      }
+      .bloomex-header .navigation-area nav ul li a {
+          font-family: 'Roboto', sans-serif;
+          font-weight: 700;
+          font-size: 15px;
+          text-transform: uppercase;
+          color: #757575;
+          padding: 12px 8px;
+          display: block;
+          border-bottom: 4px solid transparent;
+          transition: color 0.3s ease, border-color 0.3s ease;
+      }
+      .bloomex-header .navigation-area nav ul li a:hover {
+           color: #212121;
+      }
+      .bloomex-header .navigation-area nav ul li a.active {
+          color: #212121;
+          border-bottom-color: #2196f3;
+      }
+
+       /* Mobile Menu Styles */
+       .bloomex-header .mobile-menu-button {
+           display: none;
+           background: none;
+           border: none;
+           font-size: 24px;
+           cursor: pointer;
+           padding: 5px;
+           color: #212121;
+       }
+       .bloomex-header .mobile-nav {
+           display: none;
+           position: absolute;
+           top: 100%;
+           left: 0;
+           right: 0;
+           background-color: #ffffff;
+           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+           padding: 10px 0;
+       }
+       .bloomex-header .mobile-nav.active {
+           display: block;
+       }
+       .bloomex-header .mobile-nav ul {
+           flex-direction: column;
+           width: 100%;
+           list-style: none;
+           margin: 0;
+           padding: 0;
+       }
+       .bloomex-header .mobile-nav ul li {
+           margin-left: 0;
+           text-align: center;
+       }
+       .bloomex-header .mobile-nav ul li a {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+            display: block;
+            color: #757575;
+       }
+       .bloomex-header .mobile-nav ul li:last-child a {
+            border-bottom: none;
+       }
+       .bloomex-header .mobile-nav ul li a.active {
+             border-bottom-color: #eee;
+             color: #212121;
+             background-color: #f8f8f8;
+       }
+
+       /* Responsive Header */
+       @media (max-width: 767px) {
+           .bloomex-header .navigation-area {
+               display: none;
+           }
+           .bloomex-header .mobile-menu-button {
+               display: block;
+           }
+       }
+
+      /* --- Tool Page Wrapper --- */
+       .tool-page-wrapper {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         flex-grow: 1;
+         padding: 30px 15px;
+         width: 100%;
+       }
+
+      /* --- Ideal Weight Calculator Tool Styles --- */
+        .ideal-weight-calculator-container {
+            max-width: 500px;
+            /* margin: 20px auto; -- Handled by wrapper */
+            width: 100%; /* Take available width */
+            padding: 25px;
+            background-color: #f9f9f9; /* Soft background */
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+            font-family: 'Poppins', sans-serif; /* Use Poppins */
+            color: #444;
+            overflow: hidden;
+        }
+
+        .ideal-weight-calculator-container h2 {
+            text-align: center;
+            color: #333;
+            margin: 0 0 25px 0; /* Adjusted margin */
+            font-weight: 600;
+            font-size: 1.4em;
+        }
+
+        .iwc-form-group {
+            margin-bottom: 18px;
+            position: relative; /* For tooltips */
+        }
+
+        .iwc-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .iwc-form-group select,
+        .iwc-form-group input[type="number"] {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #ccc; /* Slightly darker border */
+            border-radius: 8px; /* Rounded fields */
+            font-size: 1em;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: #fff;
+            font-family: inherit; /* Inherit Poppins */
+        }
+
+         .iwc-form-group select:focus,
+         .iwc-form-group input[type="number"]:focus {
+             outline: none;
+             border-color: #7abaff; /* Softer blue focus */
+             box-shadow: 0 0 0 3px rgba(0, 100, 255, 0.1);
+         }
+         /* Remove number input spinners */
+         .iwc-form-group input[type="number"]::-webkit-outer-spin-button,
+         .iwc-form-group input[type="number"]::-webkit-inner-spin-button {
+           -webkit-appearance: none;
+           margin: 0;
+         }
+         .iwc-form-group input[type="number"] {
+           -moz-appearance: textfield;
+         }
+
+
+        /* Unit switching styling */
+        .iwc-unit-toggle {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .iwc-unit-toggle label {
+            margin-bottom: 0;
+            flex-shrink: 0; /* Prevent label from shrinking */
+        }
+        .iwc-unit-toggle select {
+            width: auto;
+            flex-grow: 1;
+        }
+
+        /* Height specific layout */
+        .iwc-height-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        .iwc-height-inputs .iwc-form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* Hide irrelevant height inputs */
+        .iwc-height-cm, .iwc-height-ft-in {
+             display: none; /* Controlled by JS */
+        }
+
+        /* Button styling */
+        .iwc-calculate-btn {
+            display: block;
+            width: 100%;
+            padding: 13px 20px;
+            background-color: #28a745; /* Green color */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            font-family: inherit; /* Inherit Poppins */
+        }
+
+        .iwc-calculate-btn:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+         .iwc-calculate-btn:active {
+             transform: scale(0.98);
+         }
+
+        /* Results area */
+        .iwc-results {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e5e5; /* Separator line */
+            display: none; /* Hidden initially */
+            animation: fadeInResult 0.5s ease;
+        }
+
+        .iwc-results h3 {
+             text-align: center;
+             color: #333;
+             margin: 0 0 20px 0; /* Adjusted margin */
+             font-weight: 600;
+        }
+
+        .iwc-results .iwc-result-item {
+            background-color: #eef2f7; /* Very light blue background */
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            color: #444;
+            display: flex; /* Align formula name and result */
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allow wrapping within item */
+            gap: 5px 10px; /* Gap between label/tooltip and result */
+        }
+        .iwc-results .iwc-result-item strong {
+             color: #0056b3; /* Highlight result value */
+             font-size: 1.05em;
+             margin-left: auto; /* Push result to the right */
+             white-space: nowrap; /* Prevent result from wrapping */
+        }
+         .iwc-results .iwc-result-label {
+             display: flex;
+             align-items: center;
+             gap: 5px; /* Space between label and icon */
+         }
+         .iwc-results p { /* Styling for the note */
+             font-size: 0.8em;
+             text-align: center;
+             margin: 15px 0 0 0; /* Adjusted margin */
+             color: #666;
+             line-height: 1.4;
+         }
+
+        /* Tooltip styles (Simplified) */
+        .iwc-tooltip {
+            position: relative; /* Keep within flow */
+            display: inline-block;
+            margin-left: 4px;
+        }
+
+        .iwc-tooltip .iwc-tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #888; /* Grey icon */
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: help;
+            user-select: none;
+        }
+
+        .iwc-tooltip .iwc-tooltiptext {
+            visibility: hidden;
+            width: 180px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 6px 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 130%; /* Position above the icon */
+            left: 50%;
+            margin-left: -90px; /* Center */
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8em;
+            font-weight: normal;
+            line-height: 1.3;
+        }
+
+        .iwc-tooltip .iwc-tooltiptext::after { /* Arrow */
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+        .iwc-tooltip:hover .iwc-tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+         /* Error Message */
+         #iwc-error-message {
+             color: #dc3545;
+             font-size: 0.9em;
+             margin-top: 15px;
+             margin-bottom: -10px; /* Pull button closer */
+             text-align: center;
+             display: none;
+             font-weight: 500;
+         }
+
+        /* Responsive adjustments */
+        @media (max-width: 550px) {
+            .ideal-weight-calculator-container {
+                padding: 20px;
+                 /* margin: 10px; -- Let wrapper handle */
+            }
+             .iwc-results .iwc-result-item {
+                 /* Stack label and result on small screens */
+                 /* flex-direction: column;
+                 align-items: flex-start; */
+                 gap: 5px;
+             }
+              .iwc-results .iwc-result-item strong {
+                  margin-left: 0; /* Don't push right */
+              }
+              .iwc-tooltip .iwc-tooltiptext {
+                 width: 150px;
+                 margin-left: -75px; /* Recenter */
+             }
+        }
+         /* Animation */
+        @keyframes fadeInResult {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+      /* --- End of Tool Styles --- */
+    </style>
+</head>
+<body>
+
+    <!-- Replicated Header -->
+    <header class="bloomex-header">
+        <div class="container">
+            <div class="logo-area">
+                 <!-- Remember to replace [YOUR_HOMEPAGE_URL] -->
+                <a href="[YOUR_HOMEPAGE_URL]">
+                   <div class="logo-placeholder">BX</div>
+                   <span class="site-name">BLOOMEX</span>
+                </a>
+            </div>
+             <button class="mobile-menu-button" id="mobile-menu-toggle" aria-label="Toggle Menu">☰</button>
+            <div class="navigation-area">
+                <nav>
+                    <ul>
+                        <!-- Remember to replace these URLs -->
+                        <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                        <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                        <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                        <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+         <!-- Mobile Navigation Dropdown -->
+        <div class="mobile-nav" id="mobile-nav-menu">
+             <ul>
+                 <!-- Remember to replace these URLs -->
+                  <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                  <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                  <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                  <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+             </ul>
+        </div>
+    </header>
+
+    <!-- Tool Content Wrapper -->
+    <div class="tool-page-wrapper">
+
+        <!-- Ideal Weight Calculator Tool HTML -->
+        <div class="ideal-weight-calculator-container">
+            <!-- Internal <style> tag removed -->
+
+            <h2>Ideal Weight Estimator</h2>
+
+            <div id="iwc-error-message"></div>
+
+            <div class="iwc-form-group">
+                <label for="iwc-gender">Gender</label>
+                <select id="iwc-gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+             <!-- Unit Selection -->
+            <div class="iwc-unit-toggle">
+                <label>Units:</label>
+                <select id="iwc-units"> <!-- Removed inline onchange -->
+                    <option value="metric" selected>Metric (cm)</option>
+                    <option value="imperial">Imperial (ft/in)</option>
+                </select>
+            </div>
+
+            <!-- Height Input -->
+            <div class="iwc-form-group iwc-height-cm" id="iwc-height-metric">
+                 <label for="iwc-height-cm">Height (cm)</label>
+                <input type="number" id="iwc-height-cm" placeholder="e.g., 175" min="1">
+            </div>
+            <div class="iwc-height-ft-in" id="iwc-height-imperial">
+                <label>Height (ft & in)</label>
+                <div class="iwc-height-inputs">
+                     <div class="iwc-form-group">
+                         <input type="number" id="iwc-height-ft" placeholder="ft" min="1">
+                     </div>
+                     <div class="iwc-form-group">
+                         <input type="number" id="iwc-height-in" placeholder="in" min="0" max="11">
+                     </div>
+                 </div>
+            </div>
+
+            <button class="iwc-calculate-btn" id="iwc-calculate-btn">Calculate Ideal Weight</button>
+
+            <div class="iwc-results" id="iwc-results">
+                <h3>Estimated Ideal Weight Range</h3>
+                <div class="iwc-result-item">
+                    <span class="iwc-result-label">
+                        Devine Formula
+                        <span class="iwc-tooltip">
+                            <span class="iwc-tooltip-icon">?</span>
+                            <span class="iwc-tooltiptext">Originally developed for medication dosage based on height.</span>
+                        </span>
+                    </span>
+                    <strong id="iwc-result-devine">-- kg</strong>
+                </div>
+                <div class="iwc-result-item">
+                    <span class="iwc-result-label">
+                        Robinson Formula
+                         <span class="iwc-tooltip">
+                            <span class="iwc-tooltip-icon">?</span>
+                            <span class="iwc-tooltiptext">Modification of the Devine formula.</span>
+                        </span>
+                    </span>
+                    <strong id="iwc-result-robinson">-- kg</strong>
+                </div>
+                 <div class="iwc-result-item">
+                     <span class="iwc-result-label">
+                         Miller Formula
+                          <span class="iwc-tooltip">
+                             <span class="iwc-tooltip-icon">?</span>
+                             <span class="iwc-tooltiptext">Another modification of the Devine formula.</span>
+                         </span>
+                     </span>
+                    <strong id="iwc-result-miller">-- kg</strong>
+                </div>
+                <div class="iwc-result-item">
+                    <span class="iwc-result-label">
+                        Hamwi Formula
+                         <span class="iwc-tooltip">
+                             <span class="iwc-tooltip-icon">?</span>
+                             <span class="iwc-tooltiptext">Quick estimation rule, commonly used.</span>
+                         </span>
+                    </span>
+                    <strong id="iwc-result-hamwi">-- kg</strong>
+                </div>
+                 <p>Note: These formulas provide estimates and may not be accurate for all body types or populations (e.g., very muscular individuals). Consult a healthcare professional for personalized advice.</p>
+            </div>
+
+             <!-- Internal <script> tag removed -->
+        </div>
+        <!-- End Ideal Weight Calculator Tool HTML -->
+
+    </div>
+    <!-- End Tool Content Wrapper -->
+
+    <!-- Tool JavaScript -->
+    <script>
+        // IIFE for Ideal Weight Calculator
+        (function() {
+             const container = document.querySelector('.ideal-weight-calculator-container');
+             if (!container) {
+                 console.error("Ideal Weight Calculator container not found!");
+                 return;
+             }
+
+            // Get DOM elements
+            const iwcGenderSelect = container.querySelector('#iwc-gender');
+            const iwcUnitSelect = container.querySelector('#iwc-units');
+            const iwcHeightCmInput = container.querySelector('#iwc-height-cm');
+            const iwcHeightFtInput = container.querySelector('#iwc-height-ft');
+            const iwcHeightInInput = container.querySelector('#iwc-height-in');
+            const iwcCalculateBtn = container.querySelector('#iwc-calculate-btn');
+            const iwcResultsDiv = container.querySelector('#iwc-results');
+            const iwcErrorMessageDiv = container.querySelector('#iwc-error-message');
+            const iwcResultDevine = container.querySelector('#iwc-result-devine');
+            const iwcResultRobinson = container.querySelector('#iwc-result-robinson');
+            const iwcResultMiller = container.querySelector('#iwc-result-miller');
+            const iwcResultHamwi = container.querySelector('#iwc-result-hamwi');
+            const iwcHeightMetricDiv = container.querySelector('#iwc-height-metric');
+            const iwcHeightImperialDiv = container.querySelector('#iwc-height-imperial');
+
+            // Check if all essential elements exist
+            if (!iwcGenderSelect || !iwcUnitSelect || !iwcHeightCmInput || !iwcHeightFtInput || !iwcHeightInInput || !iwcCalculateBtn || !iwcResultsDiv || !iwcErrorMessageDiv || !iwcResultDevine || !iwcResultRobinson || !iwcResultMiller || !iwcResultHamwi || !iwcHeightMetricDiv || !iwcHeightImperialDiv) {
+                console.error("One or more elements required for the Ideal Weight Calculator were not found.");
+                 if(iwcCalculateBtn) iwcCalculateBtn.disabled = true; // Disable button if elements missing
+                return;
+            }
+
+            // Function to toggle input visibility based on unit selection
+            function iwcToggleUnits() {
+                const selectedUnit = iwcUnitSelect.value;
+                if (selectedUnit === 'metric') {
+                    iwcHeightMetricDiv.style.display = 'block';
+                    iwcHeightImperialDiv.style.display = 'none';
+                    iwcHeightFtInput.value = ''; // Clear imperial inputs
+                    iwcHeightInInput.value = '';
+                } else { // imperial
+                    iwcHeightMetricDiv.style.display = 'none';
+                    iwcHeightImperialDiv.style.display = 'block';
+                    iwcHeightCmInput.value = ''; // Clear metric input
+                }
+                // Hide results and errors when units change
+                iwcResultsDiv.style.display = 'none';
+                iwcErrorMessageDiv.style.display = 'none';
+            }
+
+            // Function to display errors
+            function iwcDisplayError(message) {
+                iwcErrorMessageDiv.textContent = message;
+                iwcErrorMessageDiv.style.display = 'block';
+                iwcResultsDiv.style.display = 'none'; // Hide results on error
+            }
+
+            // Function to format results
+            function formatWeightResult(kgValue) {
+                if (isNaN(kgValue) || kgValue <= 0) {
+                    return "-- kg";
+                }
+                const lbsValue = kgValue * 2.20462;
+                // Using innerHTML to allow <strong> tag potentially, but careful with XSS if source changes
+                return `${kgValue.toFixed(1)} kg <span style="font-size:0.9em; color:#555;">(${lbsValue.toFixed(1)} lbs)</span>`;
+            }
+
+            // Calculation function
+            function iwcCalculateIdealWeight() {
+                iwcErrorMessageDiv.style.display = 'none'; // Clear previous errors
+                iwcErrorMessageDiv.textContent = '';
+
+                const gender = iwcGenderSelect.value;
+                const units = iwcUnitSelect.value;
+                let heightCm, heightInches;
+
+                if (units === 'metric') {
+                    heightCm = parseFloat(iwcHeightCmInput.value);
+                    if (isNaN(heightCm) || heightCm <= 50 || heightCm > 250) { // Basic validation
+                        iwcDisplayError('Please enter a valid height (50-250 cm).');
+                        return;
+                    }
+                    heightInches = heightCm / 2.54;
+                } else { // imperial
+                    const heightFt = parseInt(iwcHeightFtInput.value);
+                    const heightIn = parseInt(iwcHeightInInput.value || 0);
+
+                    if (isNaN(heightFt) || heightFt < 2 || heightFt > 8 || isNaN(heightIn) || heightIn < 0 || heightIn >= 12) { // Basic validation
+                        iwcDisplayError('Please enter valid height (2-8 ft, 0-11 in).');
+                        return;
+                    }
+                    heightInches = (heightFt * 12) + heightIn;
+                    heightCm = heightInches * 2.54;
+                }
+
+                const minHeightInches = 60; // 5 feet
+                 if (heightInches < minHeightInches) {
+                      console.warn("Height is below 5 feet, formulas might be less accurate.");
+                     // Optionally display a non-blocking warning to the user here
+                 }
+                const inchesOver5Feet = Math.max(0, heightInches - minHeightInches);
+
+                let ibwDevine, ibwRobinson, ibwMiller, ibwHamwi;
+
+                const devineBase = (gender === 'male') ? 50 : 45.5;
+                ibwDevine = devineBase + (2.3 * inchesOver5Feet);
+
+                const robinsonBase = (gender === 'male') ? 52 : 49;
+                const robinsonFactor = (gender === 'male') ? 1.9 : 1.7;
+                ibwRobinson = robinsonBase + (robinsonFactor * inchesOver5Feet);
+
+                const millerBase = (gender === 'male') ? 56.2 : 53.1;
+                const millerFactor = (gender === 'male') ? 1.41 : 1.36;
+                ibwMiller = millerBase + (millerFactor * inchesOver5Feet); // Miller also uses inches over 60
+
+                const hamwiBase = (gender === 'male') ? 48.0 : 45.5;
+                const hamwiFactor = (gender === 'male') ? 2.7 : 2.2;
+                ibwHamwi = hamwiBase + (hamwiFactor * inchesOver5Feet);
+
+                // Ensure results > 0
+                ibwDevine = Math.max(1, ibwDevine); // Use 1kg as minimum plausible
+                ibwRobinson = Math.max(1, ibwRobinson);
+                ibwMiller = Math.max(1, ibwMiller);
+                ibwHamwi = Math.max(1, ibwHamwi);
+
+                // Display results using innerHTML for formatted output
+                iwcResultDevine.innerHTML = formatWeightResult(ibwDevine);
+                iwcResultRobinson.innerHTML = formatWeightResult(ibwRobinson);
+                iwcResultMiller.innerHTML = formatWeightResult(ibwMiller);
+                iwcResultHamwi.innerHTML = formatWeightResult(ibwHamwi);
+
+                iwcResultsDiv.style.display = 'block'; // Show results
+            }
+
+            // Attach event listeners
+            iwcCalculateBtn.addEventListener('click', iwcCalculateIdealWeight);
+            iwcUnitSelect.addEventListener('change', iwcToggleUnits); // Add listener for unit changes
+
+            // Initialize unit visibility on page load
+            iwcToggleUnits();
+
+        })(); // End Ideal Weight Calculator IIFE
+
+
+       // Simple Mobile Menu Toggle Script (Same as before)
+       (function() {
+           const menuButton = document.getElementById('mobile-menu-toggle');
+           const mobileNav = document.getElementById('mobile-nav-menu');
+
+           if (menuButton && mobileNav) {
+               menuButton.addEventListener('click', function() {
+                   mobileNav.classList.toggle('active');
+               });
+
+                mobileNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                         mobileNav.classList.remove('active');
+                    });
+                });
+
+                 document.addEventListener('click', function(event) {
+                     if (!mobileNav || !menuButton) return;
+                     const isClickInsideNav = mobileNav.contains(event.target);
+                     const isClickOnButton = menuButton.contains(event.target);
+
+                     if (!isClickInsideNav && !isClickOnButton && mobileNav.classList.contains('active')) {
+                         mobileNav.classList.remove('active');
+                     }
+                 });
+           } else {
+                console.warn("Mobile menu button or nav element not found.");
+           }
+       })();
+    </script>
+
+</body>
+</html>
