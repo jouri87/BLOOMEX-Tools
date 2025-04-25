@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloomex - Calorie Calculator</title> <!-- Updated Title -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'/>
+
+    <style>
+      /* --- Base Styles & Reset (Minimal) --- */
+      html {
+        font-family: sans-serif;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif; /* Default font */
+        background-color: #e6f7ff; /* Light blue background */
+        color: #212121;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      a {
+        background: transparent;
+        text-decoration: none;
+        color: #2196f3; /* Default link color */
+      }
+      a:active, a:hover {
+        outline: 0;
+        color: #2196f3; /* Hover color */
+      }
+      h1, h2, h3, h4, h5, h6 {
+         margin-top: 0;
+         margin-bottom: 0.5rem;
+         font-weight: 500;
+      }
+      /* Helper */
+       .container {
+           width: 100%;
+           padding-right: 15px;
+           padding-left: 15px;
+           margin-right: auto;
+           margin-left: auto;
+       }
+       @media (min-width: 576px) { .container { max-width: 540px; } }
+       @media (min-width: 768px) { .container { max-width: 720px; } }
+       @media (min-width: 992px) { .container { max-width: 960px; } }
+       @media (min-width: 1200px) { .container { max-width: 1140px; } }
+
+
+      /* --- Replicated Header Styles --- */
+      .bloomex-header {
+          background-color: #ffffff;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          padding: 10px 0;
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+          width: 100%;
+      }
+      .bloomex-header .container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .bloomex-header .logo-area {
+          display: flex;
+          align-items: center;
+      }
+      .bloomex-header .logo-area a {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+      }
+      .bloomex-header .logo-placeholder {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4f46e5, #10b981);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+            flex-shrink: 0;
+       }
+      .bloomex-header .site-name {
+          font-family: 'Roboto', sans-serif;
+          font-weight: bold;
+          font-size: 28px;
+          color: #212121;
+          line-height: 1.2;
+      }
+      .bloomex-header .navigation-area nav ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+      }
+      .bloomex-header .navigation-area nav ul li {
+          margin-left: 20px;
+      }
+      .bloomex-header .navigation-area nav ul li a {
+          font-family: 'Roboto', sans-serif;
+          font-weight: 700;
+          font-size: 15px;
+          text-transform: uppercase;
+          color: #757575;
+          padding: 12px 8px;
+          display: block;
+          border-bottom: 4px solid transparent;
+          transition: color 0.3s ease, border-color 0.3s ease;
+      }
+      .bloomex-header .navigation-area nav ul li a:hover {
+           color: #212121;
+      }
+      .bloomex-header .navigation-area nav ul li a.active {
+          color: #212121;
+          border-bottom-color: #2196f3;
+      }
+
+       /* Mobile Menu Styles */
+       .bloomex-header .mobile-menu-button {
+           display: none;
+           background: none;
+           border: none;
+           font-size: 24px;
+           cursor: pointer;
+           padding: 5px;
+           color: #212121;
+       }
+       .bloomex-header .mobile-nav {
+           display: none;
+           position: absolute;
+           top: 100%;
+           left: 0;
+           right: 0;
+           background-color: #ffffff;
+           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+           padding: 10px 0;
+       }
+       .bloomex-header .mobile-nav.active {
+           display: block;
+       }
+       .bloomex-header .mobile-nav ul {
+           flex-direction: column;
+           width: 100%;
+           list-style: none;
+           margin: 0;
+           padding: 0;
+       }
+       .bloomex-header .mobile-nav ul li {
+           margin-left: 0;
+           text-align: center;
+       }
+       .bloomex-header .mobile-nav ul li a {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+            display: block;
+            color: #757575;
+       }
+       .bloomex-header .mobile-nav ul li:last-child a {
+            border-bottom: none;
+       }
+       .bloomex-header .mobile-nav ul li a.active {
+             border-bottom-color: #eee;
+             color: #212121;
+             background-color: #f8f8f8;
+       }
+
+       /* Responsive Header */
+       @media (max-width: 767px) {
+           .bloomex-header .navigation-area {
+               display: none;
+           }
+           .bloomex-header .mobile-menu-button {
+               display: block;
+           }
+       }
+
+      /* --- Tool Page Wrapper --- */
+       .tool-page-wrapper {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         flex-grow: 1;
+         padding: 30px 15px;
+         width: 100%;
+       }
+
+       /* --- Calorie Calculator Tool Styles --- */
+        .calorie-calculator-container {
+            max-width: 550px;
+            /* margin: 20px auto; -- Handled by wrapper */
+            width: 100%; /* Take available width */
+            padding: 25px;
+            background-color: #f8f9fa; /* Soft background */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            font-family: 'Poppins', sans-serif; /* Use Poppins */
+            color: #333;
+            overflow: hidden; /* Contain elements */
+        }
+
+        .calorie-calculator-container h2 {
+            text-align: center;
+            color: #2c3e50; /* Darker blue-grey */
+            margin: 0 0 25px 0; /* Adjusted margin */
+            font-weight: 600;
+        }
+
+        .cc-form-group {
+            margin-bottom: 18px;
+            position: relative; /* For tooltips */
+        }
+
+        .cc-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.95em;
+        }
+
+        .cc-form-group input[type="number"],
+        .cc-form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ced4da; /* Light grey border */
+            border-radius: 8px; /* Rounded fields */
+            font-size: 1em;
+            box-sizing: border-box; /* Include padding in width */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: #fff;
+            font-family: inherit; /* Inherit Poppins */
+        }
+        /* Remove number input spinners */
+         .cc-form-group input[type="number"]::-webkit-outer-spin-button,
+         .cc-form-group input[type="number"]::-webkit-inner-spin-button {
+           -webkit-appearance: none;
+           margin: 0;
+         }
+         .cc-form-group input[type="number"] {
+           -moz-appearance: textfield;
+         }
+
+        .cc-form-group input[type="number"]:focus,
+        .cc-form-group select:focus {
+            outline: none;
+            border-color: #80bdff; /* Soft blue focus */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+        }
+
+        /* Unit switching styling */
+        .cc-unit-toggle {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .cc-unit-toggle label {
+            margin-bottom: 0; /* Reset margin */
+            flex-shrink: 0; /* Prevent label shrinking */
+        }
+        .cc-unit-toggle select {
+            width: auto; /* Allow select to shrink */
+            flex-grow: 1;
+        }
+
+        /* Height specific layout */
+        .cc-height-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        .cc-height-inputs .cc-form-group {
+            flex: 1; /* Distribute space */
+            margin-bottom: 0; /* Reset margin as it's inside the parent */
+        }
+
+        /* Hide irrelevant height inputs initially */
+        .cc-height-cm, .cc-height-ft-in {
+             display: none;
+        }
+
+        /* Button styling */
+        .cc-calculate-btn {
+            display: block;
+            width: 100%;
+            padding: 14px 20px;
+            background-color: #007bff; /* Primary blue */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            font-family: inherit; /* Inherit Poppins */
+        }
+
+        .cc-calculate-btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .cc-calculate-btn:active {
+             transform: scale(0.98); /* Subtle click effect */
+        }
+
+        /* Results area */
+        .cc-results {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0; /* Separator line */
+            display: none; /* Hidden initially */
+            animation: fadeIn 0.5s ease;
+        }
+
+        .cc-results h3 {
+             text-align: center;
+             color: #2c3e50;
+             margin: 0 0 15px 0; /* Adjusted margin */
+        }
+
+        .cc-results p {
+            background-color: #e9ecef; /* Light grey background for results */
+            padding: 12px;
+            border-radius: 6px;
+            margin: 0 0 12px 0; /* Adjusted margin */
+            font-size: 1em;
+            color: #333;
+            line-height: 1.4; /* Improve readability */
+        }
+        .cc-results p:last-child {
+            margin-bottom: 0;
+        }
+         .cc-results p strong {
+             color: #0056b3; /* Highlight result value */
+             font-weight: 600; /* Make result bolder */
+         }
+
+        /* Tooltip styles */
+        .cc-tooltip {
+            /* position: absolute; -- Keep inline for better flow */
+            /* right: -5px; */
+            /* top: -5px; */
+            display: inline-block;
+            margin-left: 4px;
+            position: relative; /* For tooltip text positioning */
+            vertical-align: middle; /* Align icon with text */
+        }
+
+        .cc-tooltip .cc-tooltip-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: #6c757d; /* Grey icon */
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: help;
+            user-select: none; /* Prevent text selection */
+        }
+
+        .cc-tooltip .cc-tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 135%; /* Position above the icon */
+            left: 50%;
+            margin-left: -100px; /* Center the tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85em;
+            font-weight: normal; /* Reset potential bold from label */
+            line-height: 1.3; /* Improve line height */
+        }
+
+        .cc-tooltip .cc-tooltiptext::after { /* Tooltip arrow */
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+        .cc-tooltip:hover .cc-tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+         /* Error Message */
+         #cc-error-message {
+             color: #dc3545; /* Red for errors */
+             font-size: 0.9em;
+             margin-top: 15px;
+             margin-bottom: -10px; /* Pull button closer */
+             text-align: center;
+             display: none; /* Hidden initially */
+             font-weight: 500;
+         }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .calorie-calculator-container {
+                padding: 20px;
+                 /* margin: 10px; -- Let wrapper handle */
+            }
+            .cc-form-group input[type="number"],
+            .cc-form-group select {
+                padding: 10px 12px;
+            }
+            .cc-calculate-btn {
+                 padding: 12px 15px;
+            }
+             .cc-tooltip {
+                 /* right: 0; */
+                 /* top: 0; */
+            }
+            .cc-tooltip .cc-tooltiptext { /* Adjust tooltip position on mobile */
+                width: 160px;
+                margin-left: -80px; /* Recenter */
+            }
+        }
+         /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+       /* --- End of Tool Styles --- */
+    </style>
+</head>
+<body>
+
+    <!-- Replicated Header -->
+    <header class="bloomex-header">
+        <div class="container">
+            <div class="logo-area">
+                 <!-- Remember to replace [YOUR_HOMEPAGE_URL] -->
+                <a href="[YOUR_HOMEPAGE_URL]">
+                   <div class="logo-placeholder">BX</div>
+                   <span class="site-name">BLOOMEX</span>
+                </a>
+            </div>
+             <button class="mobile-menu-button" id="mobile-menu-toggle" aria-label="Toggle Menu">☰</button>
+            <div class="navigation-area">
+                <nav>
+                    <ul>
+                        <!-- Remember to replace these URLs -->
+                        <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                        <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                        <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                        <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+         <!-- Mobile Navigation Dropdown -->
+        <div class="mobile-nav" id="mobile-nav-menu">
+             <ul>
+                 <!-- Remember to replace these URLs -->
+                  <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                  <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                  <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                  <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+             </ul>
+        </div>
+    </header>
+
+    <!-- Tool Content Wrapper -->
+    <div class="tool-page-wrapper">
+
+        <!-- Calorie Calculator Tool HTML -->
+        <div class="calorie-calculator-container">
+            <!-- Internal <style> tag removed -->
+
+            <h2>Calorie Calculator</h2>
+
+            <div id="cc-error-message"></div>
+
+            <div class="cc-form-group">
+                <label for="cc-age">Age (years)</label>
+                <input type="number" id="cc-age" placeholder="e.g., 30" min="1" max="120">
+            </div>
+
+            <div class="cc-form-group">
+                <label for="cc-gender">Gender</label>
+                <select id="cc-gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+            </div>
+
+             <!-- Unit Selection -->
+            <div class="cc-unit-toggle">
+                <label>Units:</label>
+                <select id="cc-units"> <!-- Removed inline onchange -->
+                    <option value="metric" selected>Metric (kg, cm)</option>
+                    <option value="imperial">Imperial (lbs, ft/in)</option>
+                </select>
+            </div>
+
+
+            <!-- Weight Input -->
+            <div class="cc-form-group" id="cc-weight-metric">
+                <label for="cc-weight-kg">Weight (kg)</label>
+                <input type="number" id="cc-weight-kg" placeholder="e.g., 70" min="1">
+            </div>
+             <div class="cc-form-group" id="cc-weight-imperial" style="display: none;">
+                <label for="cc-weight-lbs">Weight (lbs)</label>
+                <input type="number" id="cc-weight-lbs" placeholder="e.g., 154" min="1">
+            </div>
+
+            <!-- Height Input -->
+            <div class="cc-form-group cc-height-cm" id="cc-height-metric">
+                 <label for="cc-height-cm">Height (cm)</label>
+                <input type="number" id="cc-height-cm" placeholder="e.g., 175" min="1">
+            </div>
+            <div class="cc-height-ft-in" id="cc-height-imperial">
+                <label>Height (ft & in)</label>
+                <div class="cc-height-inputs">
+                     <div class="cc-form-group">
+                         <input type="number" id="cc-height-ft" placeholder="ft" min="1">
+                     </div>
+                     <div class="cc-form-group">
+                         <input type="number" id="cc-height-in" placeholder="in" min="0" max="11">
+                     </div>
+                 </div>
+            </div>
+
+            <div class="cc-form-group">
+                <label for="cc-activity">Activity Level
+                    <span class="cc-tooltip">
+                        <span class="cc-tooltip-icon">?</span>
+                        <span class="cc-tooltiptext">
+                            Sedentary: Little/no exercise<br>
+                            Light: 1-3 days/week<br>
+                            Moderate: 3-5 days/week<br>
+                            Active: 6-7 days/week<br>
+                            Very Active: Hard exercise/physical job
+                        </span>
+                    </span>
+                </label>
+                <select id="cc-activity">
+                    <option value="1.2">Sedentary (little or no exercise)</option>
+                    <option value="1.375">Lightly active (light exercise/sports 1-3 days/week)</option>
+                    <option value="1.55" selected>Moderately active (moderate exercise/sports 3-5 days/week)</option>
+                    <option value="1.725">Very active (hard exercise/sports 6-7 days a week)</option>
+                    <option value="1.9">Super active (very hard exercise/sports & physical job)</option>
+                </select>
+            </div>
+
+            <div class="cc-form-group">
+                <label for="cc-goal">Fitness Goal
+                    <span class="cc-tooltip">
+                         <span class="cc-tooltip-icon">?</span>
+                        <span class="cc-tooltiptext">
+                            Lose: ~500 calorie deficit<br>
+                            Maintain: No deficit/surplus<br>
+                            Gain: ~500 calorie surplus
+                        </span>
+                    </span>
+                </label>
+                <select id="cc-goal">
+                    <option value="maintain" selected>Maintain weight</option>
+                    <option value="lose">Lose weight (~0.5kg or 1lb/week)</option>
+                    <option value="gain">Gain weight (~0.5kg or 1lb/week)</option>
+                </select>
+            </div>
+
+            <button class="cc-calculate-btn" id="cc-calculate-btn">Calculate Calories</button>
+
+            <div class="cc-results" id="cc-results">
+                <h3>Your Estimated Daily Needs</h3>
+                <p id="cc-result-bmr">Basal Metabolic Rate (BMR): <strong>--</strong> kcal/day</p>
+                <p id="cc-result-tdee">Total Daily Energy Expenditure (TDEE): <strong>--</strong> kcal/day</p>
+                <p id="cc-result-goal">Recommended Daily Intake: <strong>--</strong> kcal/day</p>
+            </div>
+
+             <!-- Internal <script> tag removed -->
+        </div>
+        <!-- End Calorie Calculator Tool HTML -->
+
+    </div>
+    <!-- End Tool Content Wrapper -->
+
+    <!-- Tool JavaScript -->
+    <script>
+        // IIFE for Calorie Calculator
+        (function() {
+            const container = document.querySelector('.calorie-calculator-container');
+            if (!container) {
+                console.error("Calorie Calculator container not found!");
+                return;
+            }
+
+            // Get DOM elements
+            const ageInput = container.querySelector('#cc-age');
+            const genderSelect = container.querySelector('#cc-gender');
+            const unitSelect = container.querySelector('#cc-units');
+            const weightKgInput = container.querySelector('#cc-weight-kg');
+            const weightLbsInput = container.querySelector('#cc-weight-lbs');
+            const heightCmInput = container.querySelector('#cc-height-cm');
+            const heightFtInput = container.querySelector('#cc-height-ft');
+            const heightInInput = container.querySelector('#cc-height-in');
+            const activitySelect = container.querySelector('#cc-activity');
+            const goalSelect = container.querySelector('#cc-goal');
+            const calculateBtn = container.querySelector('#cc-calculate-btn');
+            const resultsDiv = container.querySelector('#cc-results');
+            const bmrResultP = container.querySelector('#cc-result-bmr');
+            const tdeeResultP = container.querySelector('#cc-result-tdee');
+            const goalResultP = container.querySelector('#cc-result-goal');
+            const errorMessageDiv = container.querySelector('#cc-error-message');
+            const weightMetricDiv = container.querySelector('#cc-weight-metric');
+            const weightImperialDiv = container.querySelector('#cc-weight-imperial');
+            const heightMetricDiv = container.querySelector('#cc-height-metric');
+            const heightImperialDiv = container.querySelector('#cc-height-imperial');
+
+            // Check if all essential elements exist
+            if (!ageInput || !genderSelect || !unitSelect || !weightKgInput || !weightLbsInput || !heightCmInput || !heightFtInput || !heightInInput || !activitySelect || !goalSelect || !calculateBtn || !resultsDiv || !bmrResultP || !tdeeResultP || !goalResultP || !errorMessageDiv || !weightMetricDiv || !weightImperialDiv || !heightMetricDiv || !heightImperialDiv) {
+                console.error("One or more elements required for the Calorie Calculator were not found.");
+                if (calculateBtn) calculateBtn.disabled = true;
+                return;
+            }
+
+            // Function to toggle input visibility based on unit selection
+            function toggleUnits() {
+                const selectedUnit = unitSelect.value;
+                if (selectedUnit === 'metric') {
+                    weightMetricDiv.style.display = 'block';
+                    weightImperialDiv.style.display = 'none';
+                    heightMetricDiv.style.display = 'block';
+                    heightImperialDiv.style.display = 'none';
+                    weightLbsInput.value = '';
+                    heightFtInput.value = '';
+                    heightInInput.value = '';
+                } else { // imperial
+                    weightMetricDiv.style.display = 'none';
+                    weightImperialDiv.style.display = 'block';
+                    heightMetricDiv.style.display = 'none';
+                    heightImperialDiv.style.display = 'block';
+                    weightKgInput.value = '';
+                    heightCmInput.value = '';
+                }
+                resultsDiv.style.display = 'none';
+                errorMessageDiv.style.display = 'none';
+            }
+
+            // Function to display errors
+            function displayError(message) {
+                errorMessageDiv.textContent = message;
+                errorMessageDiv.style.display = 'block';
+                resultsDiv.style.display = 'none'; // Hide results on error
+            }
+
+            // Calculation function
+            function calculateCalories() {
+                errorMessageDiv.style.display = 'none'; // Clear previous errors
+                errorMessageDiv.textContent = '';
+
+                const age = parseInt(ageInput.value);
+                const gender = genderSelect.value;
+                const activityFactor = parseFloat(activitySelect.value);
+                const goal = goalSelect.value;
+                const units = unitSelect.value;
+
+                if (isNaN(age) || age < 15 || age > 100) {
+                    displayError('Please enter a valid age (15-100).');
+                    return;
+                }
+
+                let weightKg, heightCm;
+                if (units === 'metric') {
+                    weightKg = parseFloat(weightKgInput.value);
+                    heightCm = parseFloat(heightCmInput.value);
+                    if (isNaN(weightKg) || weightKg <= 20 || weightKg > 300) { // Added basic validation
+                        displayError('Please enter a valid weight (20-300 kg).');
+                        return;
+                    }
+                    if (isNaN(heightCm) || heightCm <= 50 || heightCm > 250) { // Added basic validation
+                        displayError('Please enter a valid height (50-250 cm).');
+                        return;
+                    }
+                } else { // imperial
+                    const weightLbs = parseFloat(weightLbsInput.value);
+                    const heightFt = parseInt(heightFtInput.value);
+                    const heightIn = parseInt(heightInInput.value || 0);
+
+                    if (isNaN(weightLbs) || weightLbs <= 40 || weightLbs > 660) { // Added basic validation
+                        displayError('Please enter a valid weight (40-660 lbs).');
+                        return;
+                    }
+                     if (isNaN(heightFt) || heightFt < 2 || heightFt > 8 || isNaN(heightIn) || heightIn < 0 || heightIn >= 12) { // Basic validation
+                        displayError('Please enter valid height (2-8 ft, 0-11 in).');
+                        return;
+                    }
+                    weightKg = weightLbs / 2.20462;
+                    heightCm = (heightFt * 12 + heightIn) * 2.54;
+                }
+
+                // Calculate BMR (Mifflin-St Jeor Equation)
+                let bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age);
+                bmr += (gender === 'male') ? 5 : -161;
+
+                 // Ensure BMR is not negative (unlikely but possible with extreme inputs)
+                 bmr = Math.max(0, bmr);
+
+                const tdee = bmr * activityFactor;
+
+                let goalCalories;
+                const calorieAdjust = 500;
+
+                if (goal === 'lose') {
+                    goalCalories = tdee - calorieAdjust;
+                    if (goalCalories < 1200) goalCalories = 1200; // Minimum floor
+                } else if (goal === 'gain') {
+                    goalCalories = tdee + calorieAdjust;
+                } else { // maintain
+                    goalCalories = tdee;
+                }
+
+                // Display results
+                bmrResultP.innerHTML = `Basal Metabolic Rate (BMR): <strong>${Math.round(bmr)}</strong> kcal/day`;
+                tdeeResultP.innerHTML = `Total Daily Energy Expenditure (TDEE): <strong>${Math.round(tdee)}</strong> kcal/day`;
+                goalResultP.innerHTML = `Recommended Daily Intake for ${goal.charAt(0).toUpperCase() + goal.slice(1)}: <strong>${Math.round(goalCalories)}</strong> kcal/day`;
+
+                resultsDiv.style.display = 'block'; // Show results
+            }
+
+            // Attach event listeners
+            calculateBtn.addEventListener('click', calculateCalories);
+            unitSelect.addEventListener('change', toggleUnits); // Add listener for unit changes
+
+            // Initialize unit visibility on page load
+            toggleUnits();
+
+        })(); // End Calorie Calculator IIFE
+
+
+       // Simple Mobile Menu Toggle Script (Same as before)
+       (function() {
+           const menuButton = document.getElementById('mobile-menu-toggle');
+           const mobileNav = document.getElementById('mobile-nav-menu');
+
+           if (menuButton && mobileNav) {
+               menuButton.addEventListener('click', function() {
+                   mobileNav.classList.toggle('active');
+               });
+
+                mobileNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                         mobileNav.classList.remove('active');
+                    });
+                });
+
+                 document.addEventListener('click', function(event) {
+                     if (!mobileNav || !menuButton) return;
+                     const isClickInsideNav = mobileNav.contains(event.target);
+                     const isClickOnButton = menuButton.contains(event.target);
+
+                     if (!isClickInsideNav && !isClickOnButton && mobileNav.classList.contains('active')) {
+                         mobileNav.classList.remove('active');
+                     }
+                 });
+           } else {
+                console.warn("Mobile menu button or nav element not found.");
+           }
+       })();
+    </script>
+
+</body>
+</html>
