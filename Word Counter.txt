@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloomex - Word Counter Tool</title> <!-- Updated Title -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap' rel='stylesheet'/>
+
+    <style>
+      /* --- Base Styles & Reset (Minimal) --- */
+      html {
+        font-family: sans-serif;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif; /* Default font */
+        background-color: #e6f7ff; /* Light blue background */
+        color: #212121;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      a {
+        background: transparent;
+        text-decoration: none;
+        color: #2196f3; /* Default link color */
+      }
+      a:active, a:hover {
+        outline: 0;
+        color: #2196f3; /* Hover color */
+      }
+      h1, h2, h3, h4, h5, h6 {
+         margin-top: 0;
+         margin-bottom: 0.5rem;
+         font-weight: 500;
+      }
+      /* Helper */
+       .container {
+           width: 100%;
+           padding-right: 15px;
+           padding-left: 15px;
+           margin-right: auto;
+           margin-left: auto;
+       }
+       @media (min-width: 576px) { .container { max-width: 540px; } }
+       @media (min-width: 768px) { .container { max-width: 720px; } }
+       @media (min-width: 992px) { .container { max-width: 960px; } }
+       @media (min-width: 1200px) { .container { max-width: 1140px; } }
+
+
+      /* --- Replicated Header Styles --- */
+      .bloomex-header {
+          background-color: #ffffff;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          padding: 10px 0;
+          position: sticky;
+          top: 0;
+          z-index: 1000;
+          width: 100%;
+      }
+      .bloomex-header .container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      .bloomex-header .logo-area {
+          display: flex;
+          align-items: center;
+      }
+      .bloomex-header .logo-area a {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+      }
+      .bloomex-header .logo-placeholder {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #4f46e5, #10b981);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 10px;
+            flex-shrink: 0;
+       }
+      .bloomex-header .site-name {
+          font-family: 'Roboto', sans-serif;
+          font-weight: bold;
+          font-size: 28px;
+          color: #212121;
+          line-height: 1.2;
+      }
+      .bloomex-header .navigation-area nav ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+      }
+      .bloomex-header .navigation-area nav ul li {
+          margin-left: 20px;
+      }
+      .bloomex-header .navigation-area nav ul li a {
+          font-family: 'Roboto', sans-serif;
+          font-weight: 700;
+          font-size: 15px;
+          text-transform: uppercase;
+          color: #757575;
+          padding: 12px 8px;
+          display: block;
+          border-bottom: 4px solid transparent;
+          transition: color 0.3s ease, border-color 0.3s ease;
+      }
+      .bloomex-header .navigation-area nav ul li a:hover {
+           color: #212121;
+      }
+      .bloomex-header .navigation-area nav ul li a.active {
+          color: #212121;
+          border-bottom-color: #2196f3;
+      }
+
+       /* Mobile Menu Styles */
+       .bloomex-header .mobile-menu-button {
+           display: none;
+           background: none;
+           border: none;
+           font-size: 24px;
+           cursor: pointer;
+           padding: 5px;
+           color: #212121;
+       }
+       .bloomex-header .mobile-nav {
+           display: none;
+           position: absolute;
+           top: 100%;
+           left: 0;
+           right: 0;
+           background-color: #ffffff;
+           box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+           padding: 10px 0;
+       }
+       .bloomex-header .mobile-nav.active {
+           display: block;
+       }
+       .bloomex-header .mobile-nav ul {
+           flex-direction: column;
+           width: 100%;
+           list-style: none;
+           margin: 0;
+           padding: 0;
+       }
+       .bloomex-header .mobile-nav ul li {
+           margin-left: 0;
+           text-align: center;
+       }
+       .bloomex-header .mobile-nav ul li a {
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+            display: block;
+            color: #757575;
+       }
+       .bloomex-header .mobile-nav ul li:last-child a {
+            border-bottom: none;
+       }
+       .bloomex-header .mobile-nav ul li a.active {
+             border-bottom-color: #eee;
+             color: #212121;
+             background-color: #f8f8f8;
+       }
+
+       /* Responsive Header */
+       @media (max-width: 767px) {
+           .bloomex-header .navigation-area {
+               display: none;
+           }
+           .bloomex-header .mobile-menu-button {
+               display: block;
+           }
+       }
+
+      /* --- Tool Page Wrapper --- */
+       .tool-page-wrapper {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         flex-grow: 1;
+         padding: 30px 15px;
+         width: 100%;
+       }
+
+       /* --- Word Counter Tool Styles --- */
+        .word-counter-container {
+            max-width: 600px;
+             /* margin: 25px auto; -- Handled by wrapper */
+             width: 100%;
+            padding: 20px 25px;
+            background-color: #f8f9fa; /* Light grey background */
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            font-family: 'Poppins', sans-serif; /* Use Poppins */
+            color: #333;
+        }
+
+        .word-counter-container h2 {
+            text-align: center;
+            color: #2c3e50; /* Darker blue-grey */
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 1.5em;
+        }
+
+        #wc-text-input {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px 15px;
+            border: 1px solid #ced4da; /* Grey border */
+            border-radius: 8px; /* Rounded corners */
+            font-size: 1em;
+            line-height: 1.5;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            resize: vertical; /* Allow vertical resize */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background-color: #fff;
+            font-family: inherit; /* Inherit Poppins */
+        }
+
+        #wc-text-input:focus {
+            outline: none;
+            border-color: #80bdff; /* Soft blue focus */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+        }
+
+        .wc-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Responsive grid */
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e9ecef; /* Slightly darker background for results */
+            border-radius: 8px;
+        }
+
+        .wc-result-item {
+            text-align: center;
+            padding: 10px 5px;
+            background-color: #fff; /* White background for items */
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        .wc-result-item .wc-label {
+            display: block;
+            font-size: 0.85em;
+            color: #6c757d; /* Grey label */
+            margin-bottom: 4px;
+        }
+
+        .wc-result-item .wc-count {
+            display: block;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #0056b3; /* Blue count */
+        }
+
+        #wc-clear-btn {
+            display: block;
+            width: auto; /* Let padding define width */
+            min-width: 100px;
+            padding: 10px 15px;
+            margin: 0 auto; /* Center the button */
+            background-color: #6c757d; /* Grey button */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            text-align: center;
+            font-family: inherit; /* Inherit Poppins */
+        }
+
+        #wc-clear-btn:hover {
+            background-color: #5a6268; /* Darker grey on hover */
+        }
+         #wc-clear-btn:active {
+             transform: scale(0.97); /* Click effect */
+         }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+             .word-counter-container {
+                padding: 15px;
+                 /* margin: 15px; -- Let wrapper handle */
+            }
+            .wc-results {
+                grid-template-columns: 1fr 1fr; /* Force 2 columns on small screens */
+                gap: 10px;
+                 padding: 10px;
+            }
+             .wc-result-item .wc-count {
+                 font-size: 1.2em;
+             }
+        }
+        /* --- End of Tool Styles --- */
+    </style>
+</head>
+<body>
+
+    <!-- Replicated Header -->
+    <header class="bloomex-header">
+        <div class="container">
+            <div class="logo-area">
+                 <!-- Remember to replace [YOUR_HOMEPAGE_URL] -->
+                <a href="[YOUR_HOMEPAGE_URL]">
+                   <div class="logo-placeholder">BX</div>
+                   <span class="site-name">BLOOMEX</span>
+                </a>
+            </div>
+             <button class="mobile-menu-button" id="mobile-menu-toggle" aria-label="Toggle Menu">☰</button>
+            <div class="navigation-area">
+                <nav>
+                    <ul>
+                        <!-- Remember to replace these URLs -->
+                        <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                        <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                        <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                        <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+         <!-- Mobile Navigation Dropdown -->
+        <div class="mobile-nav" id="mobile-nav-menu">
+             <ul>
+                 <!-- Remember to replace these URLs -->
+                  <li><a href="[YOUR_HOMEPAGE_URL]">Home</a></li>
+                  <li><a href="[YOUR_ABOUT_URL]">About Us</a></li>
+                  <li><a href="[YOUR_CONTACT_URL]">Contact Us</a></li>
+                  <li><a href="[YOUR_PRIVACY_URL]">Privacy Policy</a></li>
+             </ul>
+        </div>
+    </header>
+
+    <!-- Tool Content Wrapper -->
+    <div class="tool-page-wrapper">
+
+        <!-- Word Counter Tool HTML -->
+        <div class="word-counter-container">
+            <!-- Internal <style> tag removed -->
+
+            <h2>Word Counter Tool</h2>
+
+            <textarea id="wc-text-input" placeholder="Type or paste your text here..."></textarea>
+
+            <div class="wc-results">
+                <div class="wc-result-item">
+                    <span class="wc-label">Words</span>
+                    <span class="wc-count" id="wc-word-count">0</span>
+                </div>
+                <div class="wc-result-item">
+                    <span class="wc-label">Characters</span>
+                    <span class="wc-count" id="wc-char-count-spaces">0</span>
+                </div>
+                <div class="wc-result-item">
+                    <span class="wc-label">Characters (no spaces)</span>
+                    <span class="wc-count" id="wc-char-count-no-spaces">0</span>
+                </div>
+                <div class="wc-result-item">
+                    <span class="wc-label">Sentences</span>
+                    <span class="wc-count" id="wc-sentence-count">0</span>
+                </div>
+                 <div class="wc-result-item">
+                    <span class="wc-label">Paragraphs</span>
+                    <span class="wc-count" id="wc-paragraph-count">0</span>
+                </div>
+            </div>
+
+            <button id="wc-clear-btn">Clear Text</button>
+
+             <!-- Internal <script> tag removed -->
+        </div>
+        <!-- End Word Counter Tool HTML -->
+
+    </div>
+    <!-- End Tool Content Wrapper -->
+
+    <!-- Tool JavaScript -->
+    <script>
+        // IIFE for Word Counter
+        (function() {
+            const container = document.querySelector('.word-counter-container');
+            if (!container) {
+                console.error("Word Counter container not found!");
+                return;
+            }
+
+            // Get DOM elements
+            const textArea = container.querySelector('#wc-text-input');
+            const wordCountEl = container.querySelector('#wc-word-count');
+            const charCountSpacesEl = container.querySelector('#wc-char-count-spaces');
+            const charCountNoSpacesEl = container.querySelector('#wc-char-count-no-spaces');
+            const sentenceCountEl = container.querySelector('#wc-sentence-count');
+            const paragraphCountEl = container.querySelector('#wc-paragraph-count');
+            const clearBtn = container.querySelector('#wc-clear-btn');
+
+             // Check if all elements were found
+             if (!textArea || !wordCountEl || !charCountSpacesEl || !charCountNoSpacesEl || !sentenceCountEl || !paragraphCountEl || !clearBtn) {
+                 console.error("One or more elements required for the Word Counter were not found.");
+                 // Optionally disable functionality or show an error message to the user
+                 if (clearBtn) clearBtn.disabled = true;
+                 return; // Stop execution if elements are missing
+             }
+
+            // Function to update all counts
+            function updateCounts() {
+                // Ensure elements exist before trying to update them
+                if (!wordCountEl || !charCountSpacesEl || !charCountNoSpacesEl || !sentenceCountEl || !paragraphCountEl) return;
+
+                const text = textArea.value;
+
+                // 1. Character Count (with spaces)
+                charCountSpacesEl.textContent = text.length;
+
+                // 2. Character Count (without spaces)
+                charCountNoSpacesEl.textContent = text.replace(/\s/g, '').length;
+
+                // 3. Word Count
+                const trimmedText = text.trim();
+                wordCountEl.textContent = trimmedText ? trimmedText.split(/\s+/).length : 0;
+
+                // 4. Sentence Count (Approximation)
+                let sentenceCount = 0;
+                if (trimmedText) {
+                    const sentences = text.match(/[^.!?]+(?:[.!?]|\n\s*\n|$)+/g); // Improved regex attempt
+                     sentenceCount = sentences ? sentences.length : 0;
+                    // Basic fallback: if text exists but no sentences detected, consider it one.
+                    if (sentenceCount === 0 && trimmedText.length > 0) {
+                        sentenceCount = 1;
+                    }
+                }
+                sentenceCountEl.textContent = sentenceCount;
+
+                // 5. Paragraph Count (based on blank lines)
+                let paragraphCount = 0;
+                if (trimmedText) {
+                    // Split by one or more newline characters potentially surrounded by whitespace, filter empty
+                    const paragraphs = trimmedText.split(/\n\s*\n+/).filter(p => p.trim().length > 0);
+                    paragraphCount = paragraphs.length;
+                    // Basic fallback: if text exists but no double newlines detected, consider it one.
+                    if (paragraphCount === 0 && trimmedText.length > 0) {
+                         paragraphCount = 1;
+                    }
+                }
+                paragraphCountEl.textContent = paragraphCount;
+            }
+
+            // Function to clear the text area and reset counts
+            function clearText() {
+                if (textArea) {
+                    textArea.value = '';
+                    updateCounts(); // Update counts to show 0
+                }
+            }
+
+            // Add event listener for real-time updates on input
+            textArea.addEventListener('input', updateCounts);
+
+            // Add event listener for the clear button
+            clearBtn.addEventListener('click', clearText);
+
+            // Initial count update on page load (to show 0s)
+            updateCounts();
+
+        })(); // End Word Counter IIFE
+
+
+       // Simple Mobile Menu Toggle Script (Same as before)
+       (function() {
+           const menuButton = document.getElementById('mobile-menu-toggle');
+           const mobileNav = document.getElementById('mobile-nav-menu');
+
+           if (menuButton && mobileNav) {
+               menuButton.addEventListener('click', function() {
+                   mobileNav.classList.toggle('active');
+               });
+
+                mobileNav.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                         mobileNav.classList.remove('active');
+                    });
+                });
+
+                 document.addEventListener('click', function(event) {
+                     if (!mobileNav || !menuButton) return;
+                     const isClickInsideNav = mobileNav.contains(event.target);
+                     const isClickOnButton = menuButton.contains(event.target);
+
+                     if (!isClickInsideNav && !isClickOnButton && mobileNav.classList.contains('active')) {
+                         mobileNav.classList.remove('active');
+                     }
+                 });
+           } else {
+                console.warn("Mobile menu button or nav element not found.");
+           }
+       })();
+    </script>
+
+</body>
+</html>
